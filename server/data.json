@@ -1,0 +1,315 @@
+{
+  "users": [
+    {
+      "id": "f1a2b3c4-d5e6-7890-abcd-ef1234567890",
+      "name": "Nargisa",
+      "email": "admin@nargisa.com",
+      "phone": "900000000",
+      "password": "$2a$10$rV8BUjj7bfUyz7unEWQckumxqLuZCpsAdRQfg0c9ORksMVf3rSw.C",
+      "role": "admin",
+      "createdAt": "2026-05-23T10:00:00.000Z"
+    },
+    {
+      "id": "ef23b24d-e3e0-498a-be27-fd1bfae803be",
+      "name": "Ali Valiyev",
+      "email": "ali@mail.com",
+      "phone": "901111111",
+      "password": "$2a$10$C.b8rut/aZjdpu06jzkjU.Ld54a7E6Y1Qr6muZ0dv0bGq1tL7p3zC",
+      "role": "user",
+      "createdAt": "2026-05-23T06:13:09.922Z"
+    },
+    {
+      "id": "b0dd79b2-3fa6-4e13-bfad-0c7ac648204a",
+      "name": "Malika Karimova",
+      "email": "malika@mail.com",
+      "phone": "902222222",
+      "password": "$2a$10$sRPczD4niqvIz5Zjw/QqfOg8FPFZtTOA/KsUyZ3OsDhO.XEY7tih2",
+      "role": "user",
+      "createdAt": "2026-05-23T06:13:09.922Z"
+    }
+  ],
+  "products": [
+    {
+      "id": "21f06dd8-1367-45ad-b165-a3ae27ba5302",
+      "art": "8876",
+      "name": "Bubble White uzum ta'mli og'iz bo'shlig'ini chayish vositasi",
+      "category": "Gigiena",
+      "oldPrice": 103000,
+      "price": 50900,
+      "discount": 51,
+      "emoji": "🫐",
+      "badges": [
+        "Yangi mahsulot",
+        "Supernarx"
+      ],
+      "stock": 45,
+      "createdAt": "2026-05-23T06:13:09.922Z"
+    },
+    {
+      "id": "7ab42629-11ed-436c-a90b-ad3d2ed919c4",
+      "art": "8879",
+      "name": "Bubble White malina ta'mli og'iz bo'shlig'ini soflantiruvchi vosita",
+      "category": "Gigiena",
+      "oldPrice": 61900,
+      "price": 36900,
+      "discount": 40,
+      "emoji": "🍓",
+      "badges": [
+        "Yangi mahsulot",
+        "Supernarx"
+      ],
+      "stock": 32,
+      "createdAt": "2026-05-23T06:13:09.922Z"
+    },
+    {
+      "id": "458a22ea-a5fe-4342-8733-312d80a63d21",
+      "art": "3887",
+      "name": "«Vizual oqartirish» Expert Pharma tish pastasi",
+      "category": "Gigiena",
+      "oldPrice": 164000,
+      "price": 73900,
+      "discount": 55,
+      "emoji": "🦷",
+      "badges": [
+        "Yangi mahsulot",
+        "Supernarx"
+      ],
+      "stock": 28,
+      "createdAt": "2026-05-23T06:13:09.922Z"
+    },
+    {
+      "id": "84768c50-5269-474b-bf53-81f0d7b9e6cc",
+      "art": "3569",
+      "name": "Umooo 3+ vanna uchun o'yinchoqli bolalar to'pchasi",
+      "category": "Bolalar",
+      "oldPrice": 81900,
+      "price": 40900,
+      "discount": 50,
+      "emoji": "🧸",
+      "badges": [
+        "Yangi mahsulot",
+        "Supernarx"
+      ],
+      "stock": 17,
+      "createdAt": "2026-05-23T06:13:09.922Z"
+    },
+    {
+      "id": "2b5dafc1-6eae-465e-8ad3-0d3d9f7999ff",
+      "art": "2211",
+      "name": "Kollagen kremi 45+ yoshdan oshganlar uchun",
+      "category": "Kosmetika",
+      "oldPrice": 185000,
+      "price": 92900,
+      "discount": 50,
+      "emoji": "✨",
+      "badges": [
+        "Top sotuv"
+      ],
+      "stock": 15,
+      "createdAt": "2026-05-23T06:13:09.922Z"
+    },
+    {
+      "id": "9f559c14-66ef-4a89-af57-5ed0be00a630",
+      "art": "2212",
+      "name": "Aqua Series namlovchi yuz serumi 30 ml",
+      "category": "Kosmetika",
+      "oldPrice": 95000,
+      "price": 52900,
+      "discount": 44,
+      "emoji": "💧",
+      "badges": [
+        "Top sotuv"
+      ],
+      "stock": 40,
+      "createdAt": "2026-05-23T06:13:09.922Z"
+    },
+    {
+      "id": "fca004fd-7eb0-44c7-9ea6-117724643ac4",
+      "art": "2213",
+      "name": "Uy parfyumeriyasi lavanda va yo'lbars ko'zi",
+      "category": "Parfyumeriya",
+      "oldPrice": 75000,
+      "price": 45900,
+      "discount": 39,
+      "emoji": "🌸",
+      "badges": [
+        "Top sotuv"
+      ],
+      "stock": 22,
+      "createdAt": "2026-05-23T06:13:09.922Z"
+    },
+    {
+      "id": "c5e5450e-39b0-4dbd-9b23-f52567afbb73",
+      "art": "3301",
+      "name": "Yuz uchun krem-maska maksimal namlanish",
+      "category": "Kosmetika",
+      "oldPrice": 220000,
+      "price": 79900,
+      "discount": 64,
+      "emoji": "🔥",
+      "badges": [
+        "🔥 Olov narx"
+      ],
+      "stock": 8,
+      "createdAt": "2026-05-23T06:13:09.922Z"
+    },
+    {
+      "id": "60357d27-09c5-46de-9f1b-bf022f1dd82f",
+      "art": "4401",
+      "name": "Omega-3 kapsulalari yurak uchun 60 dona",
+      "category": "Salomatlik",
+      "oldPrice": 165000,
+      "price": 89900,
+      "discount": 45,
+      "emoji": "❤️",
+      "badges": [
+        "Salomatlik"
+      ],
+      "stock": 50,
+      "createdAt": "2026-05-23T06:13:09.922Z"
+    },
+    {
+      "id": "1f07d97a-d2c6-410d-a5d4-01e0e91efb3e",
+      "art": "4402",
+      "name": "Vitamin D3 + K2 immunitet va suyak mustahkamligi",
+      "category": "Salomatlik",
+      "oldPrice": 120000,
+      "price": 65900,
+      "discount": 45,
+      "emoji": "☀️",
+      "badges": [
+        "Salomatlik"
+      ],
+      "stock": 33,
+      "createdAt": "2026-05-23T06:13:09.922Z"
+    }
+  ],
+  "categories": [
+    {
+      "id": "fa295270-6289-4767-a82b-46ad20eaec7a",
+      "name": "Kosmetika",
+      "icon": "💄",
+      "count": 120
+    },
+    {
+      "id": "1793caa3-6ffe-426b-bfb8-f985fbe41df1",
+      "name": "Parfyumeriya",
+      "icon": "🌸",
+      "count": 85
+    },
+    {
+      "id": "502f563d-7288-450c-b57b-933126ae88ce",
+      "name": "Salomatlik",
+      "icon": "💊",
+      "count": 64
+    },
+    {
+      "id": "b1a18a7f-6651-41dd-9fe2-96b84b9529b6",
+      "name": "Gigiena",
+      "icon": "🧼",
+      "count": 97
+    },
+    {
+      "id": "d1892f2b-f6ef-44e2-9ee3-88a1862a0d4f",
+      "name": "Bolalar",
+      "icon": "🧸",
+      "count": 43
+    },
+    {
+      "id": "ffd38858-3449-4bfe-a7d4-9c3d51241656",
+      "name": "Uy-ro'zg'or",
+      "icon": "🏠",
+      "count": 38
+    }
+  ],
+  "orders": [
+    {
+      "id": "f9109d5f-8fb4-4023-ace7-a1124dc282f2",
+      "userId": "user2",
+      "userName": "Ali Valiyev",
+      "items": [
+        {
+          "name": "Bubble White uzum ta'mli",
+          "qty": 2,
+          "price": 50900
+        }
+      ],
+      "total": 101800,
+      "status": "delivered",
+      "createdAt": "2026-05-23T06:13:09.922Z"
+    },
+    {
+      "id": "70f9804a-c3f0-47ce-86e3-04283510d728",
+      "userId": "user3",
+      "userName": "Malika Karimova",
+      "items": [
+        {
+          "name": "Kollagen kremi",
+          "qty": 1,
+          "price": 92900
+        },
+        {
+          "name": "Omega-3 kapsulalari",
+          "qty": 1,
+          "price": 89900
+        }
+      ],
+      "total": 182800,
+      "status": "processing",
+      "createdAt": "2026-05-23T06:13:09.922Z"
+    },
+    {
+      "id": "7076f068-dd0e-4bf3-99b8-d34f7a676eca",
+      "userId": "user2",
+      "userName": "Ali Valiyev",
+      "items": [
+        {
+          "name": "Vitamin D3 + K2",
+          "qty": 3,
+          "price": 65900
+        }
+      ],
+      "total": 197700,
+      "status": "pending",
+      "createdAt": "2026-05-23T06:13:09.922Z"
+    }
+  ],
+  "banners": [
+    {
+      "id": "banner-1",
+      "title": "YANGI KOLLEKSIYA",
+      "subtitle": "Bahorda yangi ranglar, yangi kayfiyat. Faberlic kosmetikasi bilan beauty rutiningizni yangilang",
+      "badge": "-30%",
+      "badgeSub": "GACHA",
+      "btnText": "Hozir xarid qiling!",
+      "gradient": "linear-gradient(135deg, #ff6b9d 0%, #ffd1e8 100%)",
+      "accentColor": "#e91e8c",
+      "active": true,
+      "createdAt": "2026-05-23T06:13:09.922Z"
+    },
+    {
+      "id": "banner-2",
+      "title": "YOZGI CHEGIRMA",
+      "subtitle": "Eng yaxshi parfyumeriya va kosmetika mahsulotlari. Sizning go'zalligingiz uchun premium sifat",
+      "badge": "-50%",
+      "badgeSub": "CHEGIRMA",
+      "btnText": "Xarid qilish",
+      "gradient": "linear-gradient(135deg, #6B2FA0 0%, #C39BD3 100%)",
+      "accentColor": "#6B2FA0",
+      "active": true,
+      "createdAt": "2026-05-23T06:13:09.922Z"
+    },
+    {
+      "id": "banner-3",
+      "title": "SALOMATLIK MAHSULOTLARI",
+      "subtitle": "Vitamin va mineral komplekslar. Sog'lik va baquvvatlik uchun eng yaxshi tanlov",
+      "badge": "-45%",
+      "badgeSub": "CHEGIRMA",
+      "btnText": "Ko'rish",
+      "gradient": "linear-gradient(135deg, #11998e 0%, #A9DFBF 100%)",
+      "accentColor": "#11998e",
+      "active": true,
+      "createdAt": "2026-05-23T06:13:09.922Z"
+    }
+  ]
+}
