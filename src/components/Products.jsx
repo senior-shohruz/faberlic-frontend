@@ -115,7 +115,7 @@ export default function Products({ onRequireAuth }) {
   const { t } = useLang()
 
   useEffect(() => {
-    fetch('http://localhost:5000/api/products')
+    fetch(`${import.meta.env.VITE_API_URL || 'http://localhost:5000/api'}/products`)
       .then(r => r.ok ? r.json() : [])
       .then(data => { setProducts(Array.isArray(data) && data.length > 0 ? data : STATIC); setLoading(false) })
       .catch(() => { setProducts(STATIC); setLoading(false) })

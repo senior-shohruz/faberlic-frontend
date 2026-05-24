@@ -26,7 +26,7 @@ export default function Categories() {
   const { t } = useLang()
 
   useEffect(() => {
-    fetch('http://localhost:5000/api/categories')
+    fetch(`${import.meta.env.VITE_API_URL || 'http://localhost:5000/api'}/categories`)
       .then(r => r.ok ? r.json() : [])
       .then(data => { setCats(Array.isArray(data) && data.length > 0 ? data : STATIC); setLoading(false) })
       .catch(() => { setCats(STATIC); setLoading(false) })

@@ -37,7 +37,7 @@ export default function Hero() {
   const { t } = useLang()
 
   useEffect(() => {
-    fetch('http://localhost:5000/api/banners')
+    fetch(`${import.meta.env.VITE_API_URL || 'http://localhost:5000/api'}/banners`)
       .then(r => r.ok ? r.json() : [])
       .then(data => { if (data.length > 0) setApiSlides(data) })
       .catch(() => {})
