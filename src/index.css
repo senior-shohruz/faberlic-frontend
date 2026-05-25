@@ -2710,8 +2710,9 @@ button { cursor: pointer; border: none; background: none; font-family: inherit; 
   position: fixed; inset: 0; z-index: 1000;
   background: rgba(0,0,0,0.65);
   backdrop-filter: blur(14px) saturate(180%);
-  display: flex; align-items: center; justify-content: center;
-  padding: 20px;
+  display: flex; align-items: flex-start; justify-content: center;
+  padding: 80px 20px 20px;
+  overflow-y: auto;
   animation: pmOverlayIn 0.2s ease;
 }
 .pm {
