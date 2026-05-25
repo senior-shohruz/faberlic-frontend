@@ -37,12 +37,28 @@ function SkeletonCard() {
   )
 }
 
-function ProductCard({ product, onRequireAuth, onQuickView }) {
+function useFavorites() {
+  const [favs, setFavs] = useState(() => {
+    try { return new Set(JSON.parse(localStorage.getItem('favs') || '[]')) }
+    catch { return new Set() }
+  })
+  function toggle(id) {
+    setFavs(prev => {
+      const next = new Set(prev)
+      next.has(id) ? next.delete(id) : next.add(id)
+      localStorage.setItem('favs', JSON.stringify([...next]))
+      return next
+    })
+  }
+  return { favs, toggle }
+}
+
+function ProductCard({ product, onRequireAuth, onQuickView, favs, onToggleFav }) {
   const { user } = useAuth()
   const { addItem, items } = useCart()
   const { addToast } = useToast()
   const { t } = useLang()
-  const [liked, setLiked] = useState(false)
+  const liked = favs.has(product.id)
   const inCart = items.some(i => i.id === product.id)
 
   function handleAdd(e) {
@@ -54,7 +70,7 @@ function ProductCard({ product, onRequireAuth, onQuickView }) {
 
   function handleLike(e) {
     e.stopPropagation()
-    setLiked(l => !l)
+    onToggleFav(product.id)
     if (!liked) addToast(t('products.addedToFav'), 'success')
   }
 
@@ -112,6 +128,7 @@ export default function Products({ onRequireAuth }) {
   const [products, setProducts] = useState([])
   const [modalProduct, setModalProduct] = useState(null)
   const { t } = useLang()
+  const { favs, toggle: toggleFav } = useFavorites()
 
   useEffect(() => {
     fetch(`${import.meta.env.VITE_API_URL || 'http://localhost:5000/api'}/products`)
@@ -136,6 +153,8 @@ export default function Products({ onRequireAuth }) {
                 product={product}
                 onRequireAuth={onRequireAuth}
                 onQuickView={setModalProduct}
+                favs={favs}
+                onToggleFav={toggleFav}
               />
             ))
         }
