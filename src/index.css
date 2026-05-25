@@ -3635,6 +3635,13 @@ button { cursor: pointer; border: none; background: none; font-family: inherit; 
   font-weight: 700;
   display: flex; align-items: center; justify-content: center;
 }
+.mob-nav-flag { font-size: 20px; line-height: 1; display: block; }
+.mob-nav-lang { position: relative; }
+.mob-nav-lang::after {
+  content: ''; position: absolute; top: 6px; right: 6px;
+  width: 6px; height: 6px; border-radius: 50%;
+  background: #e63946;
+}
 
 /* ===== SCROLL REVEAL ANIMATIONS ===== */
 @keyframes fadeInUp {
@@ -5075,16 +5082,28 @@ button:not(.cart-btn):not(.burger):not(.mob-nav-item):not(.bnr-arr):active {
 /* Responsive */
 @media (max-width: 700px) {
   .ck-overlay { padding: 0; align-items: flex-end; }
-  .ck-modal { border-radius: 20px 20px 0 0; max-height: 96vh; }
-  .ck-grid { grid-template-columns: 1fr; }
-  .ck-right { position: static; }
+  .ck-modal { border-radius: 24px 24px 0 0; max-height: 94vh; }
+  .ck-head { padding: 14px 16px; border-radius: 24px 24px 0 0; }
+  .ck-head-title { font-size: 15px; }
+  .ck-body { padding: 12px 14px 20px; }
+  .ck-grid { grid-template-columns: 1fr; gap: 10px; }
+  .ck-right { position: static; order: -1; }
   .ck-points { grid-template-columns: 1fr 1fr; }
   .ck-pay-opts { grid-template-columns: 1fr 1fr; }
+  .ck-inp-wrap { height: 48px; }
+  .ck-inp-wrap input { font-size: 16px; }
+  .ck-textarea { font-size: 16px; }
+  .ck-card { padding: 14px; border-radius: 16px; }
+  .ck-step-title { font-size: 13px; margin-bottom: 12px; }
+  .ck-summary { border-radius: 16px; }
+  .ck-sum-title { font-size: 14px; }
+  .ck-submit { height: 52px; font-size: 15px; }
 }
 @media (max-width: 460px) {
   .ck-row2 { grid-template-columns: 1fr; }
   .ck-points { grid-template-columns: 1fr; }
   .ck-pay-opts { grid-template-columns: 1fr; }
+  .ck-point { padding: 12px; }
 }
 
 /* Dark mode */

@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react'
+import { createPortal } from 'react-dom'
 import { useAuth } from '../context/AuthContext'
 import { useCart } from '../context/CartContext'
 import { useToast } from '../context/ToastContext'
@@ -89,7 +90,7 @@ export default function CheckoutModal({ onClose, onRequireAuth }) {
   }
 
   /* ── Login gate ── */
-  if (!user) return (
+  if (!user) return createPortal(
     <div className="ck-overlay" onMouseDown={e => e.target === e.currentTarget && onClose()}>
       <div className="ck-modal ck-modal-sm">
         <button className="ck-x" onClick={onClose}><XIcon /></button>
@@ -99,7 +100,8 @@ export default function CheckoutModal({ onClose, onRequireAuth }) {
           <button className="ck-submit" onClick={() => { onRequireAuth?.(); onClose() }}>{t('checkout.login')}</button>
         </div>
       </div>
-    </div>
+    </div>,
+    document.body
   )
 
   /* ── Success screen ── */
@@ -107,7 +109,7 @@ export default function CheckoutModal({ onClose, onRequireAuth }) {
     const point = pickupPoints.find(p => p.id === success.pickupPointId)
     const mapLink = success.pickupPointMapLink
       || (success.pickupPointAddress ? `https://maps.google.com/?q=${encodeURIComponent(success.pickupPointAddress)}` : null)
-    return (
+    return createPortal(
       <div className="ck-overlay" onMouseDown={e => e.target === e.currentTarget && onClose()}>
         <div className="ck-modal ck-modal-sm">
           <div className="ck-success">
@@ -151,12 +153,13 @@ export default function CheckoutModal({ onClose, onRequireAuth }) {
             <button className="ck-submit" onClick={onClose}>{t('checkout.continue')}</button>
           </div>
         </div>
-      </div>
+      </div>,
+      document.body
     )
   }
 
   /* ── Main form ── */
-  return (
+  return createPortal(
     <div className="ck-overlay" onMouseDown={e => e.target === e.currentTarget && onClose()}>
       <div className="ck-modal">
 
@@ -314,7 +317,8 @@ export default function CheckoutModal({ onClose, onRequireAuth }) {
           </form>
         </div>
       </div>
-    </div>
+    </div>,
+    document.body
   )
 }
 

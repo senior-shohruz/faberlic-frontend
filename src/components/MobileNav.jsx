@@ -2,13 +2,24 @@ import { useCart } from '../context/CartContext'
 import { useAuth } from '../context/AuthContext'
 import { useLang } from '../context/LanguageContext'
 
+const LANG_CYCLE = { uz: 'ru', ru: 'en', en: 'uz' }
+const LANG_FLAG = {
+  uz: '🇺🇿',
+  ru: '🇷🇺',
+  en: '🇬🇧',
+}
+
 export default function MobileNav({ onOpenSearch, onOpenAuth }) {
   const { count, setOpen: openCart } = useCart()
   const { user } = useAuth()
-  const { t } = useLang()
+  const { t, lang, setLang } = useLang()
 
   function handleProfile() {
     if (!user) onOpenAuth?.()
+  }
+
+  function cycleLang() {
+    setLang(LANG_CYCLE[lang] || 'uz')
   }
 
   return (
@@ -50,6 +61,11 @@ export default function MobileNav({ onOpenSearch, onOpenAuth }) {
           </svg>
         )}
         <span>{user ? user.name.split(' ')[0] : t('mobile.profile')}</span>
+      </button>
+
+      <button className="mob-nav-item mob-nav-lang" onClick={cycleLang}>
+        <span className="mob-nav-flag">{LANG_FLAG[lang]}</span>
+        <span>{lang.toUpperCase()}</span>
       </button>
     </nav>
   )
