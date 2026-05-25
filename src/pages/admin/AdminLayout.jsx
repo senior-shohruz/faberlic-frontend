@@ -1,3 +1,4 @@
+import { useState } from 'react'
 import { NavLink, Outlet, useNavigate } from 'react-router-dom'
 import { useAuth } from '../../context/AuthContext'
 
@@ -13,21 +14,56 @@ const navItems = [
 export default function AdminLayout() {
   const { user, logout } = useAuth()
   const navigate = useNavigate()
+  const [sidebarOpen, setSidebarOpen] = useState(false)
 
   function handleLogout() {
     logout()
     navigate('/')
   }
 
+  function closeNav() {
+    setSidebarOpen(false)
+  }
+
   return (
     <div className="adm">
-      <aside className="adm-sidebar">
-        <div className="adm-logo">
-          <span className="logo-icon" style={{ width: 36, height: 36, fontSize: 17 }}>F</span>
-          <div>
-            <div className="adm-logo-text">aberlic.</div>
-            <div className="adm-logo-sub">Admin Panel</div>
+
+      {/* Mobile top bar */}
+      <div className="adm-topbar">
+        <button className="adm-topbar-menu" onClick={() => setSidebarOpen(true)}>
+          <svg width="20" height="20" fill="none" stroke="currentColor" strokeWidth="2.2" viewBox="0 0 24 24">
+            <line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/>
+          </svg>
+        </button>
+        <div className="adm-topbar-brand">
+          <span className="adm-topbar-logo">F</span>
+          <span className="adm-topbar-name">aberlic <span>Admin</span></span>
+        </div>
+        <div className="adm-topbar-avatar" onClick={handleLogout} title="Chiqish">
+          {user?.name?.[0]?.toUpperCase()}
+        </div>
+      </div>
+
+      {/* Sidebar overlay */}
+      {sidebarOpen && (
+        <div className="adm-sidebar-overlay" onClick={closeNav} />
+      )}
+
+      {/* Sidebar */}
+      <aside className={`adm-sidebar${sidebarOpen ? ' adm-sidebar-open' : ''}`}>
+        <div className="adm-sidebar-head">
+          <div className="adm-logo">
+            <span className="logo-icon" style={{ width: 36, height: 36, fontSize: 17 }}>F</span>
+            <div>
+              <div className="adm-logo-text">aberlic.</div>
+              <div className="adm-logo-sub">Admin Panel</div>
+            </div>
           </div>
+          <button className="adm-sidebar-close" onClick={closeNav}>
+            <svg width="18" height="18" fill="none" stroke="currentColor" strokeWidth="2.5" viewBox="0 0 24 24">
+              <path d="M18 6L6 18M6 6l12 12"/>
+            </svg>
+          </button>
         </div>
 
         <nav className="adm-nav">
@@ -37,6 +73,7 @@ export default function AdminLayout() {
               to={item.to}
               end={item.end}
               className={({ isActive }) => `adm-nav-link${isActive ? ' active' : ''}`}
+              onClick={closeNav}
             >
               {item.icon}
               <span>{item.label}</span>
@@ -56,9 +93,25 @@ export default function AdminLayout() {
         </div>
       </aside>
 
+      {/* Main content */}
       <div className="adm-content">
         <Outlet />
       </div>
+
+      {/* Mobile bottom navigation */}
+      <nav className="adm-bottom-nav">
+        {navItems.slice(0, 5).map(item => (
+          <NavLink
+            key={item.to}
+            to={item.to}
+            end={item.end}
+            className={({ isActive }) => `adm-bottom-item${isActive ? ' active' : ''}`}
+          >
+            {item.icon}
+            <span>{item.label}</span>
+          </NavLink>
+        ))}
+      </nav>
     </div>
   )
 }
