@@ -59,7 +59,7 @@ function ProductCard({ product, onRequireAuth, onQuickView }) {
   }
 
   return (
-    <div className="pc" onClick={() => onQuickView(product)}>
+    <div className="pc reveal" onClick={() => onQuickView(product)}>
       <div className="pc-img">
         <button className={`pc-heart ${liked ? 'liked' : ''}`} onClick={handleLike}>
           <svg width="18" height="18" fill={liked ? '#e63946' : 'none'} stroke={liked ? '#e63946' : 'currentColor'} strokeWidth="2" viewBox="0 0 24 24">
@@ -107,12 +107,19 @@ function ProductCard({ product, onRequireAuth, onQuickView }) {
   )
 }
 
-export default function Products({ onRequireAuth }) {
+export default function Products({ onRequireAuth, activeCategory = '__all__', onCategoryChange }) {
   const [loading, setLoading] = useState(true)
   const [products, setProducts] = useState([])
-  const [activeCat, setActiveCat] = useState('__all__')
+  const [activeCat, setActiveCat] = useState(activeCategory)
   const [modalProduct, setModalProduct] = useState(null)
   const { t } = useLang()
+
+  useEffect(() => { setActiveCat(activeCategory) }, [activeCategory])
+
+  function handleCatChange(cat) {
+    setActiveCat(cat)
+    onCategoryChange?.(cat)
+  }
 
   useEffect(() => {
     fetch(`${import.meta.env.VITE_API_URL || 'http://localhost:5000/api'}/products`)
@@ -127,7 +134,7 @@ export default function Products({ onRequireAuth }) {
 
   return (
     <section className="products-wrap" id="products">
-      <div className="section-header">
+      <div className="section-header reveal">
         <p className="section-tag">{t('products.tag')}</p>
         <h2 className="section-title">{t('products.title')}</h2>
       </div>
@@ -135,7 +142,7 @@ export default function Products({ onRequireAuth }) {
       <div className="prod-cats">
         <button
           className={`prod-cat-btn ${activeCat === '__all__' ? 'active' : ''}`}
-          onClick={() => setActiveCat('__all__')}
+          onClick={() => handleCatChange('__all__')}
         >
           {t('products.all')}
         </button>
@@ -143,7 +150,7 @@ export default function Products({ onRequireAuth }) {
           <button
             key={cat}
             className={`prod-cat-btn ${activeCat === cat ? 'active' : ''}`}
-            onClick={() => setActiveCat(cat)}
+            onClick={() => handleCatChange(cat)}
           >
             {catLabel(cat)}
           </button>

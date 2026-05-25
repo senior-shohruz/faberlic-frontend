@@ -20,7 +20,7 @@ function CatSkeleton() {
   )
 }
 
-export default function Categories() {
+export default function Categories({ activeCategory = '__all__', onCategorySelect }) {
   const [cats, setCats] = useState([])
   const [loading, setLoading] = useState(true)
   const { t } = useLang()
@@ -34,15 +34,19 @@ export default function Categories() {
 
   return (
     <section className="categories" id="categories">
-      <div className="section-header">
+      <div className="section-header reveal">
         <p className="section-tag">{t('categories.tag')}</p>
         <h2 className="section-title">{t('categories.title')}</h2>
       </div>
       <div className="cats-grid">
         {loading
           ? [...Array(6)].map((_, i) => <CatSkeleton key={i} />)
-          : cats.map(c => (
-              <button key={c.id || c.name} className="cat-card">
+          : cats.map((c, i) => (
+              <button
+                key={c.id || c.name}
+                className={`cat-card reveal reveal-delay-${Math.min(i + 1, 4)} ${activeCategory === c.name ? 'active' : ''}`}
+                onClick={() => onCategorySelect?.(activeCategory === c.name ? '__all__' : c.name)}
+              >
                 <span className="cat-icon">{c.icon}</span>
                 <span className="cat-name">{c.name}</span>
                 <span className="cat-count">{c.count} {t('categories.items')}</span>

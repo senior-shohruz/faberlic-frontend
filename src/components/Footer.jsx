@@ -1,7 +1,20 @@
+import { useState } from 'react'
 import { useLang } from '../context/LanguageContext'
+import { useToast } from '../context/ToastContext'
 
 export default function Footer() {
   const { t } = useLang()
+  const { addToast } = useToast()
+  const [email, setEmail] = useState('')
+  const [subscribed, setSubscribed] = useState(false)
+
+  function handleSubscribe(e) {
+    e.preventDefault()
+    if (!email.includes('@')) { addToast('Email manzilni to\'g\'ri kiriting', 'error'); return }
+    setSubscribed(true)
+    setEmail('')
+    addToast('✉️ Obuna muvaffaqiyatli amalga oshirildi!', 'success')
+  }
 
   return (
     <footer className="footer" id="footer">
@@ -11,10 +24,22 @@ export default function Footer() {
             <h3>{t('footer.newsletter.title')}</h3>
             <p>{t('footer.newsletter.desc')}</p>
           </div>
-          <div className="footer-nl-form">
-            <input type="email" placeholder={t('footer.newsletter.placeholder')} className="footer-nl-input" />
-            <button className="footer-nl-btn">{t('footer.newsletter.btn')}</button>
-          </div>
+          <form className="footer-nl-form" onSubmit={handleSubscribe}>
+            {subscribed ? (
+              <p className="footer-nl-success">✅ Obuna bo'ldingiz!</p>
+            ) : (
+              <>
+                <input
+                  type="email"
+                  placeholder={t('footer.newsletter.placeholder')}
+                  className="footer-nl-input"
+                  value={email}
+                  onChange={e => setEmail(e.target.value)}
+                />
+                <button type="submit" className="footer-nl-btn">{t('footer.newsletter.btn')}</button>
+              </>
+            )}
+          </form>
         </div>
       </div>
 

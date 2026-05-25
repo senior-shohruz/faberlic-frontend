@@ -24,6 +24,17 @@ export default function Header({ onOpenAuth, onOpenCart, onOpenSearch }) {
     return () => window.removeEventListener('scroll', onScroll)
   }, [])
 
+  useEffect(() => {
+    const handler = (e) => {
+      if ((e.metaKey || e.ctrlKey) && e.key === 'k') {
+        e.preventDefault()
+        onOpenSearch()
+      }
+    }
+    window.addEventListener('keydown', handler)
+    return () => window.removeEventListener('keydown', handler)
+  }, [onOpenSearch])
+
   function handleLogout() { logout(); setDropOpen(false) }
 
   return (

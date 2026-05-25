@@ -14,6 +14,7 @@ import AuthModal from './components/AuthModal'
 import CartSidebar from './components/CartSidebar'
 import SearchModal from './components/SearchModal'
 import MobileNav from './components/MobileNav'
+import LoadingScreen from './components/LoadingScreen'
 import AdminLayout from './pages/admin/AdminLayout'
 import Dashboard from './pages/admin/Dashboard'
 import AdminProducts from './pages/admin/AdminProducts'
@@ -35,7 +36,15 @@ function AdminGuard({ children }) {
 function Shop() {
   const [authOpen, setAuthOpen] = useState(false)
   const [searchOpen, setSearchOpen] = useState(false)
+  const [activeCategory, setActiveCategory] = useState('__all__')
   const { setOpen: openCart, count } = useCart()
+
+  function handleCategorySelect(cat) {
+    setActiveCategory(cat)
+    setTimeout(() => {
+      document.getElementById('products')?.scrollIntoView({ behavior: 'smooth', block: 'start' })
+    }, 50)
+  }
 
   return (
     <>
@@ -47,7 +56,8 @@ function Shop() {
       />
       <main>
         <Hero />
-        <Products onRequireAuth={() => setAuthOpen(true)} />
+        <Categories activeCategory={activeCategory} onCategorySelect={handleCategorySelect} />
+        <Products onRequireAuth={() => setAuthOpen(true)} activeCategory={activeCategory} onCategoryChange={setActiveCategory} />
       </main>
       <Footer />
       <CartSidebar onRequireAuth={() => setAuthOpen(true)} />
@@ -73,6 +83,7 @@ export default function App() {
       <AuthProvider>
         <CartProvider>
           <ToastProvider>
+            <LoadingScreen />
             <BrowserRouter>
             <Routes>
               <Route path="/" element={<Shop />} />
