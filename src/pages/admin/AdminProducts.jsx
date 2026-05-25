@@ -1,5 +1,6 @@
 import { useState, useEffect, useRef } from 'react'
 import { api } from '../../api'
+import { useToast } from '../../context/ToastContext'
 
 const EMPTY = { name: '', category: 'Kosmetika', oldPrice: '', price: '', discount: '', image: '', emoji: '📦', badges: ['Yangi mahsulot'], stock: '' }
 const CATS = ['Kosmetika', 'Parfyumeriya', 'Salomatlik', 'Gigiena', 'Bolalar', "Uy-ro'zg'or"]
@@ -13,6 +14,7 @@ export default function AdminProducts() {
   const [saving, setSaving] = useState(false)
   const [delId, setDelId] = useState(null)
   const fileRef = useRef()
+  const { addToast } = useToast()
 
   useEffect(() => { api.get('/products').then(setProducts).finally(() => setLoading(false)) }, [])
 
@@ -36,18 +38,23 @@ export default function AdminProducts() {
       if (modal === 'add') {
         const p = await api.post('/products', body)
         setProducts(prev => [...prev, p])
+        addToast('✅ Mahsulot qo\'shildi', 'success')
       } else {
         const p = await api.put(`/products/${modal.id}`, body)
         setProducts(prev => prev.map(x => x.id === p.id ? p : x))
+        addToast('✅ Mahsulot yangilandi', 'success')
       }
       closeModal()
-    } catch (e) { alert(e.message) }
+    } catch (e) { addToast(e.message, 'error') }
     setSaving(false)
   }
 
   async function remove(id) {
-    await api.delete(`/products/${id}`)
-    setProducts(prev => prev.filter(p => p.id !== id))
+    try {
+      await api.delete(`/products/${id}`)
+      setProducts(prev => prev.filter(p => p.id !== id))
+      addToast('Mahsulot o\'chirildi', 'info')
+    } catch (e) { addToast(e.message, 'error') }
     setDelId(null)
   }
 

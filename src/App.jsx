@@ -7,7 +7,6 @@ import { ThemeProvider } from './context/ThemeContext'
 import { LanguageProvider } from './context/LanguageContext'
 import Header from './components/Header'
 import Hero from './components/Hero'
-import Categories from './components/Categories'
 import Products from './components/Products'
 import Footer from './components/Footer'
 import AuthModal from './components/AuthModal'
@@ -36,15 +35,7 @@ function AdminGuard({ children }) {
 function Shop() {
   const [authOpen, setAuthOpen] = useState(false)
   const [searchOpen, setSearchOpen] = useState(false)
-  const [activeCategory, setActiveCategory] = useState('__all__')
   const { setOpen: openCart, count } = useCart()
-
-  function handleCategorySelect(cat) {
-    setActiveCategory(cat)
-    setTimeout(() => {
-      document.getElementById('products')?.scrollIntoView({ behavior: 'smooth', block: 'start' })
-    }, 50)
-  }
 
   return (
     <>
@@ -56,8 +47,7 @@ function Shop() {
       />
       <main>
         <Hero />
-        <Categories activeCategory={activeCategory} onCategorySelect={handleCategorySelect} />
-        <Products onRequireAuth={() => setAuthOpen(true)} activeCategory={activeCategory} onCategoryChange={setActiveCategory} />
+        <Products onRequireAuth={() => setAuthOpen(true)} />
       </main>
       <Footer />
       <CartSidebar onRequireAuth={() => setAuthOpen(true)} />

@@ -107,18 +107,15 @@ function ProductCard({ product, onRequireAuth, onQuickView }) {
   )
 }
 
-export default function Products({ onRequireAuth, activeCategory = '__all__', onCategoryChange }) {
+export default function Products({ onRequireAuth }) {
   const [loading, setLoading] = useState(true)
   const [products, setProducts] = useState([])
-  const [activeCat, setActiveCat] = useState(activeCategory)
+  const [activeCat, setActiveCat] = useState('__all__')
   const [modalProduct, setModalProduct] = useState(null)
   const { t } = useLang()
 
-  useEffect(() => { setActiveCat(activeCategory) }, [activeCategory])
-
   function handleCatChange(cat) {
     setActiveCat(cat)
-    onCategoryChange?.(cat)
   }
 
   useEffect(() => {
@@ -142,7 +139,7 @@ export default function Products({ onRequireAuth, activeCategory = '__all__', on
       <div className="prod-cats">
         <button
           className={`prod-cat-btn ${activeCat === '__all__' ? 'active' : ''}`}
-          onClick={() => handleCatChange('__all__')}
+          onClick={() => setActiveCat('__all__')}
         >
           {t('products.all')}
         </button>
@@ -150,7 +147,7 @@ export default function Products({ onRequireAuth, activeCategory = '__all__', on
           <button
             key={cat}
             className={`prod-cat-btn ${activeCat === cat ? 'active' : ''}`}
-            onClick={() => handleCatChange(cat)}
+            onClick={() => setActiveCat(cat)}
           >
             {catLabel(cat)}
           </button>

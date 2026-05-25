@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react'
 import { api } from '../../api'
+import { useToast } from '../../context/ToastContext'
 
 const STATUSES = [
   { value: 'pending',    label: 'Kutilmoqda',    color: '#f59e0b', bg: '#fef3c7' },
@@ -14,6 +15,8 @@ export default function AdminOrders() {
   const [filter, setFilter] = useState('all')
   const [detail, setDetail] = useState(null)
   const [search, setSearch] = useState('')
+  const [delId, setDelId] = useState(null)
+  const { addToast } = useToast()
 
   useEffect(() => {
     api.get('/orders').then(data => setOrders([...data].reverse())).finally(() => setLoading(false))
@@ -24,14 +27,19 @@ export default function AdminOrders() {
       const updated = await api.put(`/orders/${id}/status`, { status })
       setOrders(prev => prev.map(o => o.id === updated.id ? { ...o, status: updated.status } : o))
       if (detail?.id === id) setDetail(d => ({ ...d, status: updated.status }))
-    } catch (e) { alert(e.message) }
+      const st = STATUSES.find(s => s.value === status)
+      addToast(`Status: ${st?.label}`, 'success')
+    } catch (e) { addToast(e.message, 'error') }
   }
 
   async function remove(id) {
-    if (!confirm("Buyurtmani o'chirishni tasdiqlaysizmi?")) return
-    await api.delete(`/orders/${id}`)
-    setOrders(prev => prev.filter(o => o.id !== id))
-    if (detail?.id === id) setDetail(null)
+    try {
+      await api.delete(`/orders/${id}`)
+      setOrders(prev => prev.filter(o => o.id !== id))
+      if (detail?.id === id) setDetail(null)
+      addToast('Buyurtma o\'chirildi', 'info')
+    } catch (e) { addToast(e.message, 'error') }
+    setDelId(null)
   }
 
   const getStatus = val => STATUSES.find(s => s.value === val) || STATUSES[0]
@@ -128,7 +136,7 @@ export default function AdminOrders() {
                       {new Date(o.createdAt).toLocaleDateString('uz-UZ')}
                     </td>
                     <td onClick={e => e.stopPropagation()}>
-                      <button className="adm-btn-icon del" onClick={() => remove(o.id)} title="O'chirish">
+                      <button className="adm-btn-icon del" onClick={() => setDelId(o.id)} title="O'chirish">
                         <TrashIcon />
                       </button>
                     </td>
@@ -213,10 +221,25 @@ export default function AdminOrders() {
               </div>
             </div>
             <div className="adm-modal-footer">
-              <button className="adm-btn-icon del" onClick={() => remove(detail.id)} style={{ padding: '8px 16px', borderRadius: 10 }}>
+              <button className="adm-btn-danger" onClick={() => { setDelId(detail.id); setDetail(null) }} style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
                 <TrashIcon /> O'chirish
               </button>
               <button className="adm-btn-primary" onClick={() => setDetail(null)}>Yopish</button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Delete Confirm */}
+      {delId && (
+        <div className="adm-overlay" onMouseDown={e => e.target === e.currentTarget && setDelId(null)}>
+          <div className="adm-confirm">
+            <div className="adm-confirm-icon">🗑️</div>
+            <h3>Buyurtmani o'chirish</h3>
+            <p>Bu amalni qaytarib bo'lmaydi. Davom etasizmi?</p>
+            <div className="adm-confirm-btns">
+              <button className="adm-btn-ghost" onClick={() => setDelId(null)}>Bekor qilish</button>
+              <button className="adm-btn-danger" onClick={() => remove(delId)}>Ha, o'chirish</button>
             </div>
           </div>
         </div>

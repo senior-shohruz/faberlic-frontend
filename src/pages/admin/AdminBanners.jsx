@@ -1,5 +1,6 @@
 import { useState, useEffect, useRef } from 'react'
 import { api } from '../../api'
+import { useToast } from '../../context/ToastContext'
 
 const GRADIENTS = [
   { label: 'Pushti',     value: 'linear-gradient(135deg, #ff6b9d 0%, #ffd1e8 100%)', accent: '#e91e8c' },
@@ -32,6 +33,7 @@ export default function AdminBanners() {
   const [delId, setDelId] = useState(null)
   const bgRef = useRef()
   const prodRef = useRef()
+  const { addToast } = useToast()
 
   useEffect(() => {
     api.get('/banners/all').then(setBanners).catch(() => setBanners([])).finally(() => setLoading(false))
@@ -52,18 +54,20 @@ export default function AdminBanners() {
   }
 
   async function save() {
-    if (!form.title.trim()) { alert('Sarlavha kiritish majburiy!'); return }
+    if (!form.title.trim()) { addToast('Sarlavha kiritish majburiy!', 'error'); return }
     setSaving(true)
     try {
       if (modal === 'add') {
         const b = await api.post('/banners', form)
         setBanners(prev => [...prev, b])
+        addToast('✅ Banner qo\'shildi', 'success')
       } else {
         const b = await api.put(`/banners/${modal.id}`, form)
         setBanners(prev => prev.map(x => x.id === b.id ? b : x))
+        addToast('✅ Banner yangilandi', 'success')
       }
       closeModal()
-    } catch (e) { alert(e.message) }
+    } catch (e) { addToast(e.message, 'error') }
     setSaving(false)
   }
 
@@ -71,12 +75,16 @@ export default function AdminBanners() {
     try {
       const b = await api.put(`/banners/${banner.id}`, { ...banner, active: !banner.active })
       setBanners(prev => prev.map(x => x.id === b.id ? b : x))
-    } catch (e) { alert(e.message) }
+      addToast(b.active ? 'Banner yoqildi' : 'Banner o\'chirildi', 'info')
+    } catch (e) { addToast(e.message, 'error') }
   }
 
   async function remove(id) {
-    await api.delete(`/banners/${id}`)
-    setBanners(prev => prev.filter(b => b.id !== id))
+    try {
+      await api.delete(`/banners/${id}`)
+      setBanners(prev => prev.filter(b => b.id !== id))
+      addToast('Banner o\'chirildi', 'info')
+    } catch (e) { addToast(e.message, 'error') }
     setDelId(null)
   }
 

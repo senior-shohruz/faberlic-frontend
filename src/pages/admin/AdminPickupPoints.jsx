@@ -1,13 +1,16 @@
 import { useState, useEffect } from 'react'
 import { api } from '../../api'
+import { useToast } from '../../context/ToastContext'
 
 const EMPTY = { name: '', address: '', phone: '', hours: '', landmark: '', emoji: '🏪', active: true, mapLink: '' }
 
 export default function AdminPickupPoints() {
   const [points, setPoints] = useState([])
   const [loading, setLoading] = useState(true)
-  const [modal, setModal] = useState(null) // null | 'add' | point-object
+  const [modal, setModal] = useState(null)
   const [form, setForm] = useState(EMPTY)
+  const [delId, setDelId] = useState(null)
+  const { addToast } = useToast()
   const [saving, setSaving] = useState(false)
   const [errors, setErrors] = useState({})
 
@@ -45,7 +48,8 @@ export default function AdminPickupPoints() {
         setPoints(prev => prev.map(p => p.id === updated.id ? updated : p))
       }
       closeModal()
-    } catch (e) { alert(e.message) }
+      addToast(modal === 'add' ? '✅ Punkt qo\'shildi' : '✅ Punkt yangilandi', 'success')
+    } catch (e) { addToast(e.message, 'error') }
     finally { setSaving(false) }
   }
 
@@ -53,16 +57,22 @@ export default function AdminPickupPoints() {
     try {
       const updated = await api.put(`/pickup-points/${point.id}`, { ...point, active: !point.active })
       setPoints(prev => prev.map(p => p.id === updated.id ? updated : p))
-    } catch (e) { alert(e.message) }
+      addToast(updated.active ? 'Punkt yoqildi' : 'Punkt o\'chirildi', 'info')
+    } catch (e) { addToast(e.message, 'error') }
   }
 
   async function remove(id) {
-    if (!confirm("Punktni o'chirishni tasdiqlaysizmi?")) return
-    await api.delete(`/pickup-points/${id}`)
-    setPoints(prev => prev.filter(p => p.id !== id))
+    try {
+      await api.delete(`/pickup-points/${id}`)
+      setPoints(prev => prev.filter(p => p.id !== id))
+      addToast('Punkt o\'chirildi', 'info')
+    } catch (e) { addToast(e.message, 'error') }
+    setDelId(null)
   }
 
-  if (loading) return <div className="adm-loading">Yuklanmoqda...</div>
+  if (loading) return (
+    <div className="adm-loading-wrap"><div className="adm-spinner" /><p>Yuklanmoqda...</p></div>
+  )
 
   return (
     <div className="adm-page">
@@ -93,7 +103,7 @@ export default function AdminPickupPoints() {
                 <button className="adm-btn-icon" onClick={() => openEdit(point)} title="Tahrirlash">
                   <EditIcon />
                 </button>
-                <button className="adm-btn-icon del" onClick={() => remove(point.id)} title="O'chirish">
+                <button className="adm-btn-icon del" onClick={() => setDelId(point.id)} title="O'chirish">
                   <TrashIcon />
                 </button>
               </div>
@@ -272,6 +282,21 @@ export default function AdminPickupPoints() {
                   <><svg width="15" height="15" fill="none" stroke="currentColor" strokeWidth="2.5" viewBox="0 0 24 24"><path d="M20 6L9 17l-5-5"/></svg> Saqlash</>
                 )}
               </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Delete Confirm */}
+      {delId && (
+        <div className="adm-overlay" onMouseDown={e => e.target === e.currentTarget && setDelId(null)}>
+          <div className="adm-confirm">
+            <div className="adm-confirm-icon">🗑️</div>
+            <h3>Punktni o'chirish</h3>
+            <p>Bu amalni qaytarib bo'lmaydi. Davom etasizmi?</p>
+            <div className="adm-confirm-btns">
+              <button className="adm-btn-ghost" onClick={() => setDelId(null)}>Bekor qilish</button>
+              <button className="adm-btn-danger" onClick={() => remove(delId)}>Ha, o'chirish</button>
             </div>
           </div>
         </div>

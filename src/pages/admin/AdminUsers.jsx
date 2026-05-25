@@ -1,11 +1,15 @@
 import { useState, useEffect } from 'react'
 import { api } from '../../api'
 import { useAuth } from '../../context/AuthContext'
+import { useToast } from '../../context/ToastContext'
 
 export default function AdminUsers() {
   const [users, setUsers] = useState([])
   const [loading, setLoading] = useState(true)
+  const [search, setSearch] = useState('')
+  const [delId, setDelId] = useState(null)
   const { user: me } = useAuth()
+  const { addToast } = useToast()
 
   useEffect(() => { api.get('/users').then(setUsers).finally(() => setLoading(false)) }, [])
 
@@ -14,62 +18,119 @@ export default function AdminUsers() {
     try {
       const updated = await api.put(`/users/${u.id}/role`, { role: newRole })
       setUsers(prev => prev.map(x => x.id === updated.id ? updated : x))
-    } catch (e) { alert(e.message) }
+      addToast(`${updated.name} → ${newRole === 'admin' ? '👑 Admin' : '👤 User'}`, 'info')
+    } catch (e) { addToast(e.message, 'error') }
   }
 
   async function remove(id) {
-    if (!confirm("Foydalanuvchini o'chirishni tasdiqlaysizmi?")) return
     try {
       await api.delete(`/users/${id}`)
       setUsers(prev => prev.filter(u => u.id !== id))
-    } catch (e) { alert(e.message) }
+      addToast('Foydalanuvchi o\'chirildi', 'info')
+    } catch (e) { addToast(e.message, 'error') }
+    setDelId(null)
   }
 
-  if (loading) return <div className="adm-loading">Yuklanmoqda...</div>
+  const filtered = users.filter(u =>
+    !search || u.name.toLowerCase().includes(search.toLowerCase()) || u.email.toLowerCase().includes(search.toLowerCase())
+  )
+
+  if (loading) return (
+    <div className="adm-loading-wrap"><div className="adm-spinner" /><p>Yuklanmoqda...</p></div>
+  )
 
   return (
     <div className="adm-page">
       <div className="adm-page-header">
-        <h1 className="adm-page-title">Foydalanuvchilar</h1>
-        <span className="adm-muted">{users.length} ta foydalanuvchi</span>
+        <div>
+          <h1 className="adm-page-title">Foydalanuvchilar</h1>
+          <p className="adm-page-sub">{users.length} ta foydalanuvchi</p>
+        </div>
+        <div className="adm-search-wrap">
+          <SearchIcon />
+          <input className="adm-search" placeholder="Ism yoki email..." value={search} onChange={e => setSearch(e.target.value)} />
+        </div>
       </div>
 
       <div className="adm-card">
-        <table className="adm-table">
-          <thead><tr><th>Ism</th><th>Email</th><th>Telefon</th><th>Rol</th><th>Qo'shilgan</th><th></th></tr></thead>
-          <tbody>
-            {users.map(u => (
-              <tr key={u.id}>
-                <td>
-                  <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
-                    <div className="adm-u-avatar">{u.name[0]?.toUpperCase()}</div>
-                    <span>{u.name}</span>
-                    {u.id === me?.id && <span className="adm-you">Siz</span>}
-                  </div>
-                </td>
-                <td className="adm-muted">{u.email}</td>
-                <td className="adm-muted">+998 {u.phone}</td>
-                <td>
-                  <span className={`adm-role-badge ${u.role}`}>{u.role === 'admin' ? '👑 Admin' : '👤 User'}</span>
-                </td>
-                <td className="adm-muted">{new Date(u.createdAt).toLocaleDateString('uz-UZ')}</td>
-                <td>
-                  <div style={{ display: 'flex', gap: 6 }}>
+        <div className="adm-table-wrap">
+          <table className="adm-table">
+            <thead>
+              <tr>
+                <th>Foydalanuvchi</th>
+                <th>Email</th>
+                <th>Telefon</th>
+                <th>Rol</th>
+                <th>Qo'shilgan</th>
+                <th></th>
+              </tr>
+            </thead>
+            <tbody>
+              {filtered.map(u => (
+                <tr key={u.id}>
+                  <td>
+                    <div className="adm-u-row">
+                      <div className="adm-u-avatar">{u.name[0]?.toUpperCase()}</div>
+                      <div>
+                        <div className="adm-u-name">
+                          {u.name}
+                          {u.id === me?.id && <span className="adm-you">Siz</span>}
+                        </div>
+                      </div>
+                    </div>
+                  </td>
+                  <td className="adm-muted">{u.email}</td>
+                  <td className="adm-muted">+998 {u.phone}</td>
+                  <td>
+                    <span className={`adm-role-badge ${u.role}`}>
+                      {u.role === 'admin' ? '👑 Admin' : '👤 User'}
+                    </span>
+                  </td>
+                  <td className="adm-muted" style={{ fontSize: 12 }}>
+                    {new Date(u.createdAt).toLocaleDateString('uz-UZ')}
+                  </td>
+                  <td>
                     {u.id !== me?.id && (
-                      <>
+                      <div className="adm-actions">
                         <button className="adm-btn-sm" onClick={() => toggleRole(u)}>
                           {u.role === 'admin' ? 'User qil' : 'Admin qil'}
                         </button>
-                        <button className="adm-btn-icon del" onClick={() => remove(u.id)}>🗑️</button>
-                      </>
+                        <button className="adm-btn-icon del" onClick={() => setDelId(u.id)} title="O'chirish">
+                          <TrashIcon />
+                        </button>
+                      </div>
                     )}
-                  </div>
-                </td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+          {filtered.length === 0 && (
+            <div className="adm-empty">
+              <div className="adm-empty-icon">👥</div>
+              <p>{search ? 'Foydalanuvchi topilmadi' : 'Foydalanuvchilar yo\'q'}</p>
+            </div>
+          )}
+        </div>
       </div>
+
+      {/* Delete Confirm */}
+      {delId && (
+        <div className="adm-overlay" onMouseDown={e => e.target === e.currentTarget && setDelId(null)}>
+          <div className="adm-confirm">
+            <div className="adm-confirm-icon">⚠️</div>
+            <h3>Foydalanuvchini o'chirish</h3>
+            <p>Bu foydalanuvchining barcha ma'lumotlari o'chib ketadi.</p>
+            <div className="adm-confirm-btns">
+              <button className="adm-btn-ghost" onClick={() => setDelId(null)}>Bekor qilish</button>
+              <button className="adm-btn-danger" onClick={() => remove(delId)}>Ha, o'chirish</button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   )
 }
+
+function SearchIcon() { return <svg width="16" height="16" fill="none" stroke="#aaa" strokeWidth="2" viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/></svg> }
+function TrashIcon() { return <svg width="15" height="15" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 01-2 2H8a2 2 0 01-2-2L5 6"/><path d="M10 11v6M14 11v6M9 6V4h6v2"/></svg> }
