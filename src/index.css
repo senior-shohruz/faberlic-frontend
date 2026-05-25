@@ -2979,13 +2979,14 @@ button { cursor: pointer; border: none; background: none; font-family: inherit; 
 }
 .sm-input {
   flex: 1;
-  border: none; outline: none;
+  border: none; outline: none !important; box-shadow: none !important;
   font-size: 17px; font-weight: 500;
   color: #111;
   background: transparent;
   font-family: inherit;
   letter-spacing: -0.2px;
 }
+.sm-input:focus, .sm-input:focus-visible { outline: none !important; box-shadow: none !important; }
 .sm-input::placeholder { color: #bbb; font-weight: 400; }
 .sm-input-actions {
   display: flex; align-items: center; gap: 8px; flex-shrink: 0; margin-left: 12px;
