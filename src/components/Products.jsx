@@ -110,13 +110,8 @@ function ProductCard({ product, onRequireAuth, onQuickView }) {
 export default function Products({ onRequireAuth }) {
   const [loading, setLoading] = useState(true)
   const [products, setProducts] = useState([])
-  const [activeCat, setActiveCat] = useState('__all__')
   const [modalProduct, setModalProduct] = useState(null)
   const { t } = useLang()
-
-  function handleCatChange(cat) {
-    setActiveCat(cat)
-  }
 
   useEffect(() => {
     fetch(`${import.meta.env.VITE_API_URL || 'http://localhost:5000/api'}/products`)
@@ -125,10 +120,6 @@ export default function Products({ onRequireAuth }) {
       .catch(() => { setProducts(STATIC); setLoading(false) })
   }, [])
 
-  const catLabel = (cat) => t(`categories.names.${cat}`) || cat
-  const rawCats = [...new Set(products.map(p => p.category).filter(Boolean))]
-  const filtered = activeCat === '__all__' ? products : products.filter(p => p.category === activeCat)
-
   return (
     <section className="products-wrap" id="products">
       <div className="section-header reveal">
@@ -136,28 +127,10 @@ export default function Products({ onRequireAuth }) {
         <h2 className="section-title">{t('products.title')}</h2>
       </div>
 
-      <div className="prod-cats">
-        <button
-          className={`prod-cat-btn ${activeCat === '__all__' ? 'active' : ''}`}
-          onClick={() => setActiveCat('__all__')}
-        >
-          {t('products.all')}
-        </button>
-        {rawCats.map(cat => (
-          <button
-            key={cat}
-            className={`prod-cat-btn ${activeCat === cat ? 'active' : ''}`}
-            onClick={() => setActiveCat(cat)}
-          >
-            {catLabel(cat)}
-          </button>
-        ))}
-      </div>
-
       <div className="ps-grid">
         {loading
           ? [...Array(8)].map((_, i) => <SkeletonCard key={i} />)
-          : filtered.map(product => (
+          : products.map(product => (
               <ProductCard
                 key={product.id}
                 product={product}

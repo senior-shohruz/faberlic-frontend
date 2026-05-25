@@ -17,7 +17,6 @@ import LoadingScreen from './components/LoadingScreen'
 import AdminLayout from './pages/admin/AdminLayout'
 import Dashboard from './pages/admin/Dashboard'
 import AdminProducts from './pages/admin/AdminProducts'
-import AdminCategories from './pages/admin/AdminCategories'
 import AdminUsers from './pages/admin/AdminUsers'
 import AdminOrders from './pages/admin/AdminOrders'
 import AdminBanners from './pages/admin/AdminBanners'
@@ -81,7 +80,6 @@ export default function App() {
               <Route path="/admin" element={<AdminGuard><AdminLayout /></AdminGuard>}>
                 <Route index element={<Dashboard />} />
                 <Route path="products" element={<AdminProducts />} />
-                <Route path="categories" element={<AdminCategories />} />
                 <Route path="banners" element={<AdminBanners />} />
                 <Route path="pickup-points" element={<AdminPickupPoints />} />
                 <Route path="users" element={<AdminUsers />} />
