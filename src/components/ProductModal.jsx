@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react'
+import { createPortal } from 'react-dom'
 import { useAuth } from '../context/AuthContext'
 import { useCart } from '../context/CartContext'
 import { useToast } from '../context/ToastContext'
@@ -34,7 +35,7 @@ export default function ProductModal({ product, onClose, onRequireAuth }) {
 
   const saving = product.oldPrice ? product.oldPrice - product.price : 0
 
-  return (
+  return createPortal(
     <div className="pm-overlay" onMouseDown={e => e.target === e.currentTarget && onClose()}>
       <div className="pm">
 
@@ -147,6 +148,7 @@ export default function ProductModal({ product, onClose, onRequireAuth }) {
           </div>
         </div>
       </div>
-    </div>
+    </div>,
+    document.body
   )
 }
