@@ -5095,18 +5095,19 @@ button:not(.cart-btn):not(.burger):not(.mob-nav-item):not(.bnr-arr):active {
   .ck-textarea { font-size: 16px; }
   .ck-card { padding: 14px; border-radius: 16px; }
   .ck-step-title { font-size: 13px; margin-bottom: 12px; }
-  .ck-summary { border-radius: 14px; padding: 12px; }
-  .ck-sum-title { font-size: 12px; margin-bottom: 8px; }
-  .ck-sum-items { gap: 6px; margin-bottom: 8px; }
-  .ck-sum-item { gap: 6px; }
-  .ck-sum-ico { font-size: 16px; }
-  .ck-sum-name { font-size: 11.5px; }
-  .ck-sum-qty { font-size: 10px; }
-  .ck-sum-price { font-size: 12px; }
-  .ck-sum-footer { padding-top: 8px; gap: 5px; }
-  .ck-sum-row { font-size: 12px; }
+  .ck-summary { border-radius: 14px; padding: 10px 12px; }
+  .ck-sum-title { font-size: 11px; margin-bottom: 6px; letter-spacing: 0.3px; }
+  .ck-sum-items { flex-direction: row; flex-wrap: wrap; gap: 4px; margin-bottom: 8px; }
+  .ck-sum-item { flex-direction: row; align-items: center; gap: 4px; background: #f4f6fb; border-radius: 8px; padding: 3px 8px; min-width: 0; max-width: 100%; }
+  .ck-sum-ico { font-size: 14px; }
+  .ck-sum-info { display: flex; align-items: center; gap: 4px; min-width: 0; }
+  .ck-sum-name { font-size: 11px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 120px; }
+  .ck-sum-qty { font-size: 10px; white-space: nowrap; }
+  .ck-sum-price { font-size: 11px; font-weight: 700; white-space: nowrap; }
+  .ck-sum-footer { padding-top: 6px; gap: 4px; }
+  .ck-sum-row { font-size: 11px; }
   .ck-sum-total { font-size: 14px; }
-  .ck-submit { height: 48px; font-size: 14px; margin-top: 8px; border-radius: 12px; }
+  .ck-submit { height: 46px; font-size: 14px; margin-top: 6px; border-radius: 12px; }
 }
 @media (max-width: 460px) {
   .ck-row2 { grid-template-columns: 1fr; }
