@@ -29,7 +29,7 @@ const TICKERS = [
   'SKIN EXPERT', 'LUXURY BRAND', 'FREE PICKUP',
 ]
 
-export default function Hero() {
+export default function Hero({ onOpenQuiz }) {
   const [cur, setCur] = useState(0)
   const [animKey, setAnimKey] = useState(0)
   const [apiSlides, setApiSlides] = useState([])
@@ -154,6 +154,12 @@ export default function Hero() {
                 <path d="M12 5v14M5 12l7 7 7-7"/>
               </svg>
             </button>
+            {onOpenQuiz && (
+              <button className="hs-quiz-btn" onClick={onOpenQuiz} style={{ borderColor: s.accent + '50', color: s.accent }}>
+                <span className="hs-quiz-icon">✨</span>
+                Teri tahlili
+              </button>
+            )}
             <div className="hs-kpi">
               <div className="hs-kpi-item">
                 <b style={{ color: s.accent }}>500+</b><small>Mahsulot</small>

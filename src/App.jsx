@@ -12,6 +12,7 @@ import Footer from './components/Footer'
 import AuthModal from './components/AuthModal'
 import CartSidebar from './components/CartSidebar'
 import SearchModal from './components/SearchModal'
+import SkinQuiz from './components/SkinQuiz'
 import MobileNav from './components/MobileNav'
 import LoadingScreen from './components/LoadingScreen'
 import AdminLayout from './pages/admin/AdminLayout'
@@ -23,6 +24,7 @@ import AdminBanners from './pages/admin/AdminBanners'
 import AdminLogin from './pages/admin/AdminLogin'
 import AdminPickupPoints from './pages/admin/AdminPickupPoints'
 import './App.css'
+import './quiz-and-mobile.css'
 
 function AdminGuard({ children }) {
   const { user } = useAuth()
@@ -34,6 +36,7 @@ function AdminGuard({ children }) {
 function Shop() {
   const [authOpen, setAuthOpen] = useState(false)
   const [searchOpen, setSearchOpen] = useState(false)
+  const [quizOpen, setQuizOpen] = useState(false)
   const { setOpen: openCart, count } = useCart()
 
   return (
@@ -45,7 +48,7 @@ function Shop() {
         onOpenSearch={() => setSearchOpen(true)}
       />
       <main>
-        <Hero />
+        <Hero onOpenQuiz={() => setQuizOpen(true)} />
         <Products onRequireAuth={() => setAuthOpen(true)} />
       </main>
       <Footer />
@@ -59,6 +62,12 @@ function Shop() {
         <SearchModal
           onClose={() => setSearchOpen(false)}
           onRequireAuth={() => { setSearchOpen(false); setAuthOpen(true) }}
+        />
+      )}
+      {quizOpen && (
+        <SkinQuiz
+          onClose={() => setQuizOpen(false)}
+          onRequireAuth={() => { setQuizOpen(false); setAuthOpen(true) }}
         />
       )}
     </>
