@@ -9,6 +9,8 @@ const STATUSES = [
   { value: 'cancelled',  label: 'Bekor qilindi', color: '#ef4444', bg: '#fee2e2' },
 ]
 
+function getStatus(val) { return STATUSES.find(s => s.value === val) || STATUSES[0] }
+
 export default function AdminOrders() {
   const [orders, setOrders] = useState([])
   const [loading, setLoading] = useState(true)
@@ -27,8 +29,7 @@ export default function AdminOrders() {
       const updated = await api.put(`/orders/${id}/status`, { status })
       setOrders(prev => prev.map(o => o.id === updated.id ? { ...o, status: updated.status } : o))
       if (detail?.id === id) setDetail(d => ({ ...d, status: updated.status }))
-      const st = STATUSES.find(s => s.value === status)
-      addToast(`Status: ${st?.label}`, 'success')
+      addToast(`Status: ${getStatus(status).label}`, 'success')
     } catch (e) { addToast(e.message, 'error') }
   }
 
@@ -37,12 +38,10 @@ export default function AdminOrders() {
       await api.delete(`/orders/${id}`)
       setOrders(prev => prev.filter(o => o.id !== id))
       if (detail?.id === id) setDetail(null)
-      addToast('Buyurtma o\'chirildi', 'info')
+      addToast("Buyurtma o'chirildi", 'info')
     } catch (e) { addToast(e.message, 'error') }
     setDelId(null)
   }
-
-  const getStatus = val => STATUSES.find(s => s.value === val) || STATUSES[0]
 
   const filtered = orders.filter(o => {
     const matchFilter = filter === 'all' || o.status === filter
@@ -64,7 +63,7 @@ export default function AdminOrders() {
           <h1 className="adm-page-title">Buyurtmalar</h1>
           <p className="adm-page-sub">{orders.length} ta buyurtma</p>
         </div>
-        <div className="adm-search-wrap">
+        <div className="adm-search-wrap" style={{ maxWidth: 260 }}>
           <svg width="15" height="15" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/></svg>
           <input className="adm-search" placeholder="Mijoz nomi yoki telefon..." value={search} onChange={e => setSearch(e.target.value)} />
         </div>
@@ -76,80 +75,124 @@ export default function AdminOrders() {
           Barchasi <span className="adm-filter-count">{orders.length}</span>
         </button>
         {STATUSES.map(s => (
-          <button key={s.value} className={`adm-filter-btn${filter === s.value ? ' active' : ''}`} onClick={() => setFilter(s.value)} style={filter === s.value ? { borderColor: s.color, color: s.color } : {}}>
+          <button key={s.value} className={`adm-filter-btn${filter === s.value ? ' active' : ''}`}
+            onClick={() => setFilter(s.value)}
+            style={filter === s.value ? { borderColor: s.color, color: s.color, background: s.bg } : {}}>
             {s.label} <span className="adm-filter-count">{counts[s.value]}</span>
           </button>
         ))}
       </div>
 
-      <div className="adm-card">
-        <div className="adm-table-wrap">
-          <table className="adm-table">
-            <thead>
-              <tr>
-                <th>#</th>
-                <th>Mijoz</th>
-                <th>Mahsulotlar</th>
-                <th>Punkt</th>
-                <th>Summa</th>
-                <th>Status</th>
-                <th>Sana</th>
-                <th></th>
-              </tr>
-            </thead>
-            <tbody>
-              {filtered.map((o, i) => {
-                const st = getStatus(o.status)
-                return (
-                  <tr key={o.id} onClick={() => setDetail(o)} className="adm-row-clickable">
-                    <td><span className="adm-art">#{filtered.length - i}</span></td>
-                    <td>
-                      <div className="adm-u-row">
-                        <div className="adm-u-avatar sm">{o.userName?.[0]?.toUpperCase()}</div>
-                        <div>
-                          <div className="adm-u-name">{o.userName}</div>
-                          {o.phone && <div className="adm-muted" style={{ fontSize: 11 }}>{o.phone}</div>}
-                        </div>
-                      </div>
-                    </td>
-                    <td className="adm-muted" style={{ maxWidth: 180, fontSize: 12 }}>
-                      {o.items?.slice(0, 2).map(it => `${it.emoji || ''} ${it.name}`.trim()).join(', ')}
-                      {o.items?.length > 2 && ` +${o.items.length - 2}`}
-                    </td>
-                    <td>
-                      {o.pickupPointName
-                        ? <span className="ord-punkt-pill">🏪 {o.pickupPointName}</span>
-                        : <span className="adm-muted" style={{fontSize:12}}>—</span>}
-                    </td>
-                    <td><strong className="adm-price-new">{o.total?.toLocaleString()} UZS</strong></td>
-                    <td onClick={e => e.stopPropagation()}>
-                      <select
-                        className="adm-status-select"
+      {filtered.length === 0 ? (
+        <div className="adm-empty"><div className="adm-empty-icon">📋</div><p>Buyurtmalar yo'q</p></div>
+      ) : (
+        <>
+          {/* Desktop table */}
+          <div className="adm-card adm-desktop-only">
+            <div className="adm-table-wrap">
+              <table className="adm-table">
+                <thead>
+                  <tr><th>#</th><th>Mijoz</th><th>Mahsulotlar</th><th>Punkt</th><th>Summa</th><th>Status</th><th>Sana</th><th></th></tr>
+                </thead>
+                <tbody>
+                  {filtered.map((o, i) => {
+                    const st = getStatus(o.status)
+                    return (
+                      <tr key={o.id} onClick={() => setDetail(o)} className="adm-row-clickable">
+                        <td><span className="adm-art">#{filtered.length - i}</span></td>
+                        <td>
+                          <div className="adm-u-row">
+                            <div className="adm-u-avatar sm">{o.userName?.[0]?.toUpperCase()}</div>
+                            <div>
+                              <div className="adm-u-name">{o.userName}</div>
+                              {o.phone && <div className="adm-muted" style={{ fontSize: 11 }}>{o.phone}</div>}
+                            </div>
+                          </div>
+                        </td>
+                        <td className="adm-muted" style={{ maxWidth: 180, fontSize: 12 }}>
+                          {o.items?.slice(0, 2).map(it => `${it.emoji || ''} ${it.name}`.trim()).join(', ')}
+                          {o.items?.length > 2 && ` +${o.items.length - 2}`}
+                        </td>
+                        <td>
+                          {o.pickupPointName
+                            ? <span className="ord-punkt-pill">🏪 {o.pickupPointName}</span>
+                            : <span className="adm-muted" style={{ fontSize: 12 }}>—</span>}
+                        </td>
+                        <td><strong className="adm-price-new">{o.total?.toLocaleString()} UZS</strong></td>
+                        <td onClick={e => e.stopPropagation()}>
+                          <select className="adm-status-select"
+                            style={{ borderColor: st.color, color: st.color, background: st.bg }}
+                            value={o.status}
+                            onChange={e => changeStatus(o.id, e.target.value)}>
+                            {STATUSES.map(s => <option key={s.value} value={s.value}>{s.label}</option>)}
+                          </select>
+                        </td>
+                        <td className="adm-muted" style={{ fontSize: 12 }}>{new Date(o.createdAt).toLocaleDateString('uz-UZ')}</td>
+                        <td onClick={e => e.stopPropagation()}>
+                          <button className="adm-btn-icon del" onClick={() => setDelId(o.id)}><TrashIcon /></button>
+                        </td>
+                      </tr>
+                    )
+                  })}
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+          {/* Mobile cards */}
+          <div className="adm-mobile-only adm-order-cards">
+            {filtered.map((o, i) => {
+              const st = getStatus(o.status)
+              return (
+                <div key={o.id} className="adm-order-card" onClick={() => setDetail(o)}>
+                  <div className="adm-oc-head">
+                    <div className="adm-oc-id">
+                      <span className="adm-art">#{filtered.length - i}</span>
+                      <span className="adm-oc-date">{new Date(o.createdAt).toLocaleDateString('uz-UZ')}</span>
+                    </div>
+                    <span className="adm-status-pill" style={{ background: st.bg, color: st.color }}>{st.label}</span>
+                  </div>
+
+                  <div className="adm-oc-user">
+                    <div className="adm-u-avatar sm">{o.userName?.[0]?.toUpperCase()}</div>
+                    <div>
+                      <div className="adm-u-name">{o.userName}</div>
+                      {o.phone && <div className="adm-muted" style={{ fontSize: 11 }}>{o.phone}</div>}
+                    </div>
+                  </div>
+
+                  {o.items?.length > 0 && (
+                    <div className="adm-oc-items">
+                      {o.items.slice(0, 2).map((it, j) => (
+                        <span key={j} className="adm-oc-item-tag">{it.emoji || '📦'} {it.name}</span>
+                      ))}
+                      {o.items.length > 2 && <span className="adm-oc-item-tag adm-oc-more">+{o.items.length - 2}</span>}
+                    </div>
+                  )}
+
+                  <div className="adm-oc-footer">
+                    <div className="adm-oc-total">
+                      <strong>{o.total?.toLocaleString()}</strong> UZS
+                    </div>
+                    {o.pickupPointName && (
+                      <span className="adm-oc-punkt">🏪 {o.pickupPointName}</span>
+                    )}
+                    <div className="adm-oc-actions" onClick={e => e.stopPropagation()}>
+                      <select className="adm-status-select adm-oc-select"
                         style={{ borderColor: st.color, color: st.color, background: st.bg }}
                         value={o.status}
-                        onChange={e => changeStatus(o.id, e.target.value)}
-                      >
+                        onChange={e => changeStatus(o.id, e.target.value)}>
                         {STATUSES.map(s => <option key={s.value} value={s.value}>{s.label}</option>)}
                       </select>
-                    </td>
-                    <td className="adm-muted" style={{ fontSize: 12 }}>
-                      {new Date(o.createdAt).toLocaleDateString('uz-UZ')}
-                    </td>
-                    <td onClick={e => e.stopPropagation()}>
-                      <button className="adm-btn-icon del" onClick={() => setDelId(o.id)} title="O'chirish">
-                        <TrashIcon />
-                      </button>
-                    </td>
-                  </tr>
-                )
-              })}
-            </tbody>
-          </table>
-          {filtered.length === 0 && (
-            <div className="adm-empty"><div className="adm-empty-icon">📋</div><p>Buyurtmalar yo'q</p></div>
-          )}
-        </div>
-      </div>
+                      <button className="adm-btn-icon del" onClick={() => setDelId(o.id)}><TrashIcon /></button>
+                    </div>
+                  </div>
+                </div>
+              )
+            })}
+          </div>
+        </>
+      )}
 
       {/* Order Detail Modal */}
       {detail && (
@@ -179,31 +222,23 @@ export default function AdminOrders() {
                           <p className="ord-punkt-addr">{detail.pickupPointAddress}</p>
                         </div>
                       </div>
-                      {(detail.pickupPointMapLink || detail.pickupPointAddress) && (
-                        <a
-                          className="ord-punkt-map"
-                          href={detail.pickupPointMapLink || `https://maps.google.com/?q=${encodeURIComponent(detail.pickupPointAddress)}`}
-                          target="_blank" rel="noopener noreferrer"
-                        >
-                          <svg width="13" height="13" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></svg>
-                          Xaritada ochish
-                          <svg width="11" height="11" fill="none" stroke="currentColor" strokeWidth="2.5" viewBox="0 0 24 24"><path d="M18 13v6a2 2 0 01-2 2H5a2 2 0 01-2-2V8a2 2 0 012-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
-                        </a>
-                      )}
+                      <a className="ord-punkt-map"
+                        href={detail.pickupPointMapLink || `https://maps.google.com/?q=${encodeURIComponent(detail.pickupPointAddress || '')}`}
+                        target="_blank" rel="noopener noreferrer">
+                        <svg width="13" height="13" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></svg>
+                        Xaritada ochish
+                      </a>
                     </div>
                   ) : <p className="adm-muted">—</p>}
                   <h4 className="ord-section-title" style={{ marginTop: 16 }}>Status</h4>
-                  <select
-                    className="adm-status-select"
+                  <select className="adm-status-select"
                     style={{ borderColor: getStatus(detail.status).color, color: getStatus(detail.status).color, background: getStatus(detail.status).bg, width: '100%' }}
                     value={detail.status}
-                    onChange={e => changeStatus(detail.id, e.target.value)}
-                  >
+                    onChange={e => changeStatus(detail.id, e.target.value)}>
                     {STATUSES.map(s => <option key={s.value} value={s.value}>{s.label}</option>)}
                   </select>
                 </div>
               </div>
-
               <h4 className="ord-section-title" style={{ marginTop: 20 }}>Mahsulotlar</h4>
               <div className="ord-items">
                 {detail.items?.map((it, i) => (
@@ -214,10 +249,7 @@ export default function AdminOrders() {
                     <span className="ord-item-price">{(it.price * it.qty).toLocaleString()} UZS</span>
                   </div>
                 ))}
-                <div className="ord-item-total">
-                  <span>Jami:</span>
-                  <strong>{detail.total?.toLocaleString()} UZS</strong>
-                </div>
+                <div className="ord-item-total"><span>Jami:</span><strong>{detail.total?.toLocaleString()} UZS</strong></div>
               </div>
             </div>
             <div className="adm-modal-footer">
@@ -230,7 +262,6 @@ export default function AdminOrders() {
         </div>
       )}
 
-      {/* Delete Confirm */}
       {delId && (
         <div className="adm-overlay" onMouseDown={e => e.target === e.currentTarget && setDelId(null)}>
           <div className="adm-confirm">
