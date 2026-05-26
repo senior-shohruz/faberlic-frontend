@@ -6984,8 +6984,9 @@ html, body { overflow-x: hidden; max-width: 100vw; }
    ============================================================ */
 @media (max-width: 768px) {
   .adm-order-cards {
-    gap: 14px;
-    padding-top: 10px;
+    gap: 24px;
+    padding-top: 14px;
+    padding-bottom: 14px;
   }
   .adm-order-card {
     margin-bottom: 0;
@@ -6993,5 +6994,5 @@ html, body { overflow-x: hidden; max-width: 100vw; }
   }
 }
 @media (max-width: 480px) {
-  .adm-order-cards { gap: 12px; padding-top: 10px; }
+  .adm-order-cards { gap: 22px; padding-top: 12px; padding-bottom: 12px; }
 }
