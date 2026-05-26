@@ -7504,3 +7504,7 @@ html, body { overflow-x: hidden; max-width: 100vw; }
   .hs-num { display: none; }
   .hs-dots { left: 50% !important; transform: translateX(-50%); }
 }
+
+
+/* Hide hero arrows — navigatsiya dots orqali bo'ladi */
+.hs-arr { display: none !important; }
