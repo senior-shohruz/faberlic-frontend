@@ -145,6 +145,7 @@ export default function AdminOrders() {
               const st = getStatus(o.status)
               return (
                 <div key={o.id} className="adm-order-card" onClick={() => setDetail(o)}>
+                  {/* Top row: order # + status */}
                   <div className="adm-oc-head">
                     <div className="adm-oc-id">
                       <span className="adm-art">#{filtered.length - i}</span>
@@ -153,30 +154,40 @@ export default function AdminOrders() {
                     <span className="adm-status-pill" style={{ background: st.bg, color: st.color }}>{st.label}</span>
                   </div>
 
-                  <div className="adm-oc-user">
-                    <div className="adm-u-avatar sm">{o.userName?.[0]?.toUpperCase()}</div>
-                    <div>
-                      <div className="adm-u-name">{o.userName}</div>
-                      {o.phone && <div className="adm-muted" style={{ fontSize: 11 }}>{o.phone}</div>}
+                  {/* Customer card — prominent */}
+                  <div className="adm-oc-customer">
+                    <div className="adm-u-avatar sm">{o.userName?.[0]?.toUpperCase() || '👤'}</div>
+                    <div className="adm-oc-cust-info">
+                      <div className="adm-oc-cust-name">{o.userName || 'Mijoz'}</div>
+                      {o.phone && (
+                        <a href={`tel:${o.phone}`} className="adm-oc-cust-phone" onClick={e => e.stopPropagation()}>
+                          <svg width="11" height="11" fill="none" stroke="currentColor" strokeWidth="2.2" viewBox="0 0 24 24">
+                            <path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07A19.5 19.5 0 013.07 9.81a19.79 19.79 0 01-3.07-8.63A2 2 0 012 0h3a2 2 0 012 1.72 12.84 12.84 0 00.7 2.81 2 2 0 01-.45 2.11L6.09 7.91a16 16 0 006 6l1.27-1.27a2 2 0 012.11-.45 12.84 12.84 0 002.81.7A2 2 0 0122 16.92z"/>
+                          </svg>
+                          {o.phone}
+                        </a>
+                      )}
                     </div>
+                    <strong className="adm-oc-total-top">{o.total?.toLocaleString()} <small>UZS</small></strong>
                   </div>
 
+                  {/* Items list */}
                   {o.items?.length > 0 && (
                     <div className="adm-oc-items">
-                      {o.items.slice(0, 2).map((it, j) => (
+                      {o.items.slice(0, 3).map((it, j) => (
                         <span key={j} className="adm-oc-item-tag">{it.emoji || '📦'} {it.name}</span>
                       ))}
-                      {o.items.length > 2 && <span className="adm-oc-item-tag adm-oc-more">+{o.items.length - 2}</span>}
+                      {o.items.length > 3 && <span className="adm-oc-item-tag adm-oc-more">+{o.items.length - 3}</span>}
                     </div>
                   )}
 
+                  {/* Pickup point */}
+                  {o.pickupPointName && (
+                    <div className="adm-oc-punkt-row">🏪 {o.pickupPointName}</div>
+                  )}
+
+                  {/* Footer: status select + delete */}
                   <div className="adm-oc-footer">
-                    <div className="adm-oc-total">
-                      <strong>{o.total?.toLocaleString()}</strong> UZS
-                    </div>
-                    {o.pickupPointName && (
-                      <span className="adm-oc-punkt">🏪 {o.pickupPointName}</span>
-                    )}
                     <div className="adm-oc-actions" onClick={e => e.stopPropagation()}>
                       <select className="adm-status-select adm-oc-select"
                         style={{ borderColor: st.color, color: st.color, background: st.bg }}
