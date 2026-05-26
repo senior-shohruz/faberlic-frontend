@@ -7592,15 +7592,15 @@ html, body { overflow-x: hidden; max-width: 100vw; }
 
 /* ============================================================
    PREMIUM STORE — WORDMARK BRAND LOGO
-   Luxury typographic logo, no icon
+   Luxury typographic logo with diamond mark
    ============================================================ */
 
 /* Sizes — token-based */
 .bl { font-family: 'Inter', sans-serif; line-height: 1; }
-.bl.bl-sm { --bl-word: 13px; --bl-sep: 9px; --bl-gap: 8px; --bl-spacing: 0.18em; }
-.bl.bl-md { --bl-word: 15px; --bl-sep: 10px; --bl-gap: 10px; --bl-spacing: 0.22em; }
-.bl.bl-lg { --bl-word: 19px; --bl-sep: 13px; --bl-gap: 14px; --bl-spacing: 0.28em; }
-.bl.bl-xl { --bl-word: 26px; --bl-sep: 16px; --bl-gap: 18px; --bl-spacing: 0.34em; }
+.bl.bl-sm { --bl-word: 12px; --bl-gap: 8px; --bl-spacing: 0.16em; }
+.bl.bl-md { --bl-word: 14px; --bl-gap: 10px; --bl-spacing: 0.2em; }
+.bl.bl-lg { --bl-word: 18px; --bl-gap: 14px; --bl-spacing: 0.24em; }
+.bl.bl-xl { --bl-word: 26px; --bl-gap: 20px; --bl-spacing: 0.32em; }
 
 /* Inline variant */
 .bl-inline {
@@ -7611,13 +7611,24 @@ html, body { overflow-x: hidden; max-width: 100vw; }
   text-transform: uppercase;
   white-space: nowrap;
 }
+.bl-words {
+  display: inline-flex; align-items: center;
+  gap: 0.4em;
+}
+.bl-mark {
+  flex-shrink: 0;
+  filter: drop-shadow(0 4px 10px rgba(230,57,70,0.35));
+  transition: transform 0.4s cubic-bezier(0.34, 1.1, 0.64, 1);
+}
 .bl-inline .bl-word {
+  display: inline-block;
+  font-size: var(--bl-word);
+}
+.bl-inline .bl-word-1 {
   background: linear-gradient(135deg, #e63946 0%, #c1121f 100%);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
-  font-size: var(--bl-word);
-  display: inline-block;
 }
 .bl-inline .bl-word-2 {
   background: linear-gradient(135deg, #1a1a2e 0%, #475569 100%);
@@ -7625,31 +7636,24 @@ html, body { overflow-x: hidden; max-width: 100vw; }
   -webkit-text-fill-color: transparent;
   background-clip: text;
 }
-.bl-inline .bl-sep {
-  font-size: var(--bl-sep);
-  color: #e63946;
-  opacity: 0.85;
-  display: inline-flex;
-  filter: drop-shadow(0 0 6px rgba(230,57,70,0.4));
-}
 
-/* Light variant — for dark backgrounds (footer, etc.) */
+/* Light variant — dark backgrounds */
 .bl-inline.bl-light .bl-word-2 {
-  background: linear-gradient(135deg, #ffffff 0%, rgba(255,255,255,0.65) 100%);
+  background: linear-gradient(135deg, #ffffff 0%, rgba(255,255,255,0.7) 100%);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
 }
 
-/* Admin variant — white text on dark */
-.bl-inline.bl-admin .bl-word {
+/* Admin variant — for sidebar */
+.bl-inline.bl-admin .bl-word-1 {
   background: linear-gradient(135deg, #ff6b78 0%, #e63946 100%);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
 }
 .bl-inline.bl-admin .bl-word-2 {
-  background: linear-gradient(135deg, #ffffff 0%, rgba(255,255,255,0.7) 100%);
+  background: linear-gradient(135deg, #ffffff 0%, rgba(255,255,255,0.75) 100%);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
@@ -7658,7 +7662,7 @@ html, body { overflow-x: hidden; max-width: 100vw; }
 /* Stacked variant — splash / loading */
 .bl-stacked {
   display: flex; flex-direction: column; align-items: center;
-  gap: 6px;
+  gap: 8px;
   text-transform: uppercase;
   font-weight: 800;
   letter-spacing: var(--bl-spacing);
@@ -7683,36 +7687,31 @@ html, body { overflow-x: hidden; max-width: 100vw; }
 }
 .bl-stacked .bl-divider {
   display: inline-flex; align-items: center;
-  gap: 10px;
+  gap: 14px;
   width: 100%;
   justify-content: center;
 }
 .bl-stacked .bl-line {
   flex: 1;
-  max-width: 60px;
+  max-width: 80px;
   height: 1px;
-  background: linear-gradient(90deg, transparent, rgba(230,57,70,0.6), transparent);
+  background: linear-gradient(90deg, transparent, rgba(230,57,70,0.7), transparent);
 }
-.bl-stacked .bl-star {
-  color: #e63946;
-  font-size: var(--bl-sep);
-  filter: drop-shadow(0 0 8px rgba(230,57,70,0.6));
-  animation: blStarPulse 2.4s ease-in-out infinite;
+.bl-stacked .bl-mark {
+  animation: blDiamondPulse 2.5s ease-in-out infinite;
 }
-@keyframes blStarPulse {
-  0%, 100% { opacity: 0.7; transform: scale(1) rotate(0deg); }
-  50% { opacity: 1; transform: scale(1.15) rotate(180deg); }
+@keyframes blDiamondPulse {
+  0%, 100% { transform: scale(1) rotate(0deg); filter: drop-shadow(0 0 8px rgba(230,57,70,0.5)); }
+  50% { transform: scale(1.15) rotate(180deg); filter: drop-shadow(0 0 16px rgba(230,57,70,0.85)); }
 }
 
 /* Hover animation */
-.logo:hover .bl-inline .bl-sep,
-.al-brand:hover .bl-inline .bl-sep,
-.adm-topbar-brand:hover .bl-inline .bl-sep {
-  animation: blSepSpin 0.6s cubic-bezier(0.34, 1.1, 0.64, 1);
-}
-@keyframes blSepSpin {
-  0% { transform: rotate(0deg) scale(1); }
-  100% { transform: rotate(360deg) scale(1.2); }
+.logo:hover .bl-mark,
+.al-brand:hover .bl-mark,
+.adm-topbar-brand:hover .bl-mark,
+.auth-brand:hover .bl-mark,
+.adm-logo:hover .bl-mark {
+  transform: rotate(360deg) scale(1.1);
 }
 
 /* Admin topbar Admin sub-tag */
@@ -7729,15 +7728,15 @@ html, body { overflow-x: hidden; max-width: 100vw; }
   text-transform: uppercase;
 }
 
-/* Mobile responsive sizing */
+/* Mobile responsive */
 @media (max-width: 768px) {
-  .bl.bl-md { --bl-word: 13px; --bl-sep: 9px; --bl-gap: 8px; --bl-spacing: 0.2em; }
-  .bl.bl-sm { --bl-word: 11px; --bl-sep: 8px; --bl-gap: 6px; --bl-spacing: 0.16em; }
+  .bl.bl-md { --bl-word: 12px; --bl-gap: 8px; --bl-spacing: 0.18em; }
+  .bl.bl-sm { --bl-word: 11px; --bl-gap: 6px; --bl-spacing: 0.14em; }
 }
 @media (max-width: 480px) {
-  .bl.bl-md { --bl-word: 12px; --bl-sep: 8px; --bl-gap: 6px; --bl-spacing: 0.18em; }
+  .bl.bl-md { --bl-word: 11px; --bl-gap: 7px; --bl-spacing: 0.16em; }
   .adm-topbar-sub { display: none; }
 }
 @media (max-width: 360px) {
-  .bl.bl-md { --bl-word: 11px; --bl-sep: 7px; --bl-gap: 5px; --bl-spacing: 0.14em; }
+  .bl.bl-md { --bl-word: 10px; --bl-gap: 5px; --bl-spacing: 0.12em; }
 }
