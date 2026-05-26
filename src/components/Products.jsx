@@ -5,15 +5,6 @@ import { useToast } from '../context/ToastContext'
 import { useLang } from '../context/LanguageContext'
 import ProductModal from './ProductModal'
 
-const CAT_EMOJI = {
-  'Kosmetika': '💋',
-  'Parfyumeriya': '🌷',
-  'Salomatlik': '💊',
-  'Gigiena': '🧴',
-  'Bolalar': '🧸',
-  "Uy-ro'zg'or": '🏠',
-}
-
 const STATIC = [
   { id: 1,  name: "Bubble White uzum ta'mli og'iz bo'shlig'ini chayish vositasi",       category: 'Gigiena',      oldPrice: 103000, price: 50900, discount: 51, emoji: '🫐', badges: ['Yangi mahsulot','Supernarx'] },
   { id: 2,  name: "Bubble White malina ta'mli og'iz bo'shlig'ini soflantiruvchi vosita", category: 'Gigiena',      oldPrice: 61900,  price: 36900, discount: 40, emoji: '🍓', badges: ['Yangi mahsulot','Supernarx'] },
@@ -175,7 +166,6 @@ export default function Products({ onRequireAuth }) {
             className={`prod-cat-btn ${activeCat === '__all__' ? 'active' : ''}`}
             onClick={() => setActiveCat('__all__')}
           >
-            <span className="prod-cat-emoji">✨</span>
             {t('products.all') || 'Barchasi'}
             <span className="prod-cat-count">{products.length}</span>
           </button>
@@ -185,7 +175,6 @@ export default function Products({ onRequireAuth }) {
               className={`prod-cat-btn ${activeCat === c.name ? 'active' : ''}`}
               onClick={() => setActiveCat(c.name)}
             >
-              <span className="prod-cat-emoji">{CAT_EMOJI[c.name] || '🛍️'}</span>
               {c.name}
               <span className="prod-cat-count">{c.count}</span>
             </button>
