@@ -6,10 +6,10 @@ import { useLang } from '../context/LanguageContext'
 import ProductModal from './ProductModal'
 
 const CAT_EMOJI = {
-  'Kosmetika': '💄',
-  'Parfyumeriya': '🌸',
+  'Kosmetika': '💋',
+  'Parfyumeriya': '🌷',
   'Salomatlik': '💊',
-  'Gigiena': '🧼',
+  'Gigiena': '🧴',
   'Bolalar': '🧸',
   "Uy-ro'zg'or": '🏠',
 }
