@@ -1,9 +1,18 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useMemo } from 'react'
 import { useAuth } from '../context/AuthContext'
 import { useCart } from '../context/CartContext'
 import { useToast } from '../context/ToastContext'
 import { useLang } from '../context/LanguageContext'
 import ProductModal from './ProductModal'
+
+const CAT_EMOJI = {
+  'Kosmetika': '💄',
+  'Parfyumeriya': '🌸',
+  'Salomatlik': '💊',
+  'Gigiena': '🧼',
+  'Bolalar': '🧸',
+  "Uy-ro'zg'or": '🏠',
+}
 
 const STATIC = [
   { id: 1,  name: "Bubble White uzum ta'mli og'iz bo'shlig'ini chayish vositasi",       category: 'Gigiena',      oldPrice: 103000, price: 50900, discount: 51, emoji: '🫐', badges: ['Yangi mahsulot','Supernarx'] },
@@ -127,6 +136,7 @@ export default function Products({ onRequireAuth }) {
   const [loading, setLoading] = useState(true)
   const [products, setProducts] = useState([])
   const [modalProduct, setModalProduct] = useState(null)
+  const [activeCat, setActiveCat] = useState('__all__')
   const { t } = useLang()
   const { favs, toggle: toggleFav } = useFavorites()
 
@@ -137,6 +147,20 @@ export default function Products({ onRequireAuth }) {
       .catch(() => { setProducts(STATIC); setLoading(false) })
   }, [])
 
+  // Build category list with counts from current products
+  const categories = useMemo(() => {
+    const map = new Map()
+    products.forEach(p => {
+      if (!p.category) return
+      map.set(p.category, (map.get(p.category) || 0) + 1)
+    })
+    return [...map.entries()].map(([name, count]) => ({ name, count }))
+  }, [products])
+
+  const filtered = activeCat === '__all__'
+    ? products
+    : products.filter(p => p.category === activeCat)
+
   return (
     <section className="products-wrap" id="products">
       <div className="section-header reveal">
@@ -144,10 +168,40 @@ export default function Products({ onRequireAuth }) {
         <h2 className="section-title">{t('products.title')}</h2>
       </div>
 
+      {/* Category filter chips */}
+      {!loading && categories.length > 0 && (
+        <div className="prod-cats reveal">
+          <button
+            className={`prod-cat-btn ${activeCat === '__all__' ? 'active' : ''}`}
+            onClick={() => setActiveCat('__all__')}
+          >
+            <span className="prod-cat-emoji">✨</span>
+            {t('products.all') || 'Barchasi'}
+            <span className="prod-cat-count">{products.length}</span>
+          </button>
+          {categories.map(c => (
+            <button
+              key={c.name}
+              className={`prod-cat-btn ${activeCat === c.name ? 'active' : ''}`}
+              onClick={() => setActiveCat(c.name)}
+            >
+              <span className="prod-cat-emoji">{CAT_EMOJI[c.name] || '🛍️'}</span>
+              {c.name}
+              <span className="prod-cat-count">{c.count}</span>
+            </button>
+          ))}
+        </div>
+      )}
+
       <div className="ps-grid">
         {loading
           ? [...Array(8)].map((_, i) => <SkeletonCard key={i} />)
-          : products.map(product => (
+          : filtered.length === 0 ? (
+              <div className="prod-empty">
+                <div className="prod-empty-ico">🔍</div>
+                <p>{t('products.noProducts') || 'Mahsulot topilmadi'}</p>
+              </div>
+            ) : filtered.map(product => (
               <ProductCard
                 key={product.id}
                 product={product}
