@@ -13,6 +13,7 @@ import AuthModal from './components/AuthModal'
 import CartSidebar from './components/CartSidebar'
 import SearchModal from './components/SearchModal'
 import SkinQuiz from './components/SkinQuiz'
+import FaceAnalyzer from './components/FaceAnalyzer'
 import MobileNav from './components/MobileNav'
 import LoadingScreen from './components/LoadingScreen'
 import AdminLayout from './pages/admin/AdminLayout'
@@ -37,6 +38,7 @@ function Shop() {
   const [authOpen, setAuthOpen] = useState(false)
   const [searchOpen, setSearchOpen] = useState(false)
   const [quizOpen, setQuizOpen] = useState(false)
+  const [faceOpen, setFaceOpen] = useState(false)
   const { setOpen: openCart, count } = useCart()
 
   return (
@@ -48,7 +50,7 @@ function Shop() {
         onOpenSearch={() => setSearchOpen(true)}
       />
       <main>
-        <Hero onOpenQuiz={() => setQuizOpen(true)} />
+        <Hero onOpenQuiz={() => setQuizOpen(true)} onOpenFace={() => setFaceOpen(true)} />
         <Products onRequireAuth={() => setAuthOpen(true)} />
       </main>
       <Footer />
@@ -56,6 +58,7 @@ function Shop() {
       <MobileNav
         onOpenSearch={() => setSearchOpen(true)}
         onOpenAuth={() => setAuthOpen(true)}
+        onOpenFace={() => setFaceOpen(true)}
       />
       {authOpen && <AuthModal onClose={() => setAuthOpen(false)} />}
       {searchOpen && (
@@ -68,6 +71,12 @@ function Shop() {
         <SkinQuiz
           onClose={() => setQuizOpen(false)}
           onRequireAuth={() => { setQuizOpen(false); setAuthOpen(true) }}
+        />
+      )}
+      {faceOpen && (
+        <FaceAnalyzer
+          onClose={() => setFaceOpen(false)}
+          onRequireAuth={() => { setFaceOpen(false); setAuthOpen(true) }}
         />
       )}
     </>

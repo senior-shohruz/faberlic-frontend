@@ -29,7 +29,7 @@ const TICKERS = [
   'SKIN EXPERT', 'LUXURY BRAND', 'FREE PICKUP',
 ]
 
-export default function Hero({ onOpenQuiz }) {
+export default function Hero({ onOpenQuiz, onOpenFace }) {
   const [cur, setCur] = useState(0)
   const [animKey, setAnimKey] = useState(0)
   const [apiSlides, setApiSlides] = useState([])
@@ -158,6 +158,20 @@ export default function Hero({ onOpenQuiz }) {
               <button className="hs-quiz-btn" onClick={onOpenQuiz} style={{ borderColor: s.accent + '50', color: s.accent }}>
                 <span className="hs-quiz-icon">✨</span>
                 Teri tahlili
+              </button>
+            )}
+            {onOpenFace && (
+              <button className="hs-ai-btn" onClick={onOpenFace}>
+                <span className="hs-ai-pulse" />
+                <span className="hs-ai-icon">
+                  <svg width="14" height="14" fill="none" stroke="currentColor" strokeWidth="2.2" viewBox="0 0 24 24">
+                    <circle cx="12" cy="12" r="10" />
+                    <circle cx="9" cy="10" r="0.8" fill="currentColor" />
+                    <circle cx="15" cy="10" r="0.8" fill="currentColor" />
+                    <path d="M9 15c1 1 2 1.5 3 1.5s2-0.5 3-1.5" strokeLinecap="round" />
+                  </svg>
+                </span>
+                AI Skin Scan
               </button>
             )}
             <div className="hs-kpi">
