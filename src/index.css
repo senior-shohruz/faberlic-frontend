@@ -7213,3 +7213,294 @@ html, body { overflow-x: hidden; max-width: 100vw; }
   pointer-events: none;
   z-index: -1;
 }
+
+
+/* ============================================================
+   HERO / BANNER — PREMIUM REDESIGN v2 (Faberlic style)
+   Glass nav, smooth slide animations, modern dots progress
+   ============================================================ */
+
+/* Wrapper polish - rounded card with shadow */
+.hs {
+  border-radius: 0;
+  overflow: hidden;
+  position: relative;
+  isolation: isolate;
+}
+.hs::after {
+  content: '';
+  position: absolute; inset: 0;
+  background: radial-gradient(ellipse at 30% 50%, transparent 40%, rgba(0,0,0,0.25) 100%);
+  pointer-events: none; z-index: 1;
+}
+
+/* Body slide-in animation per slide change */
+.hs-body {
+  animation: hsSlideIn 0.7s cubic-bezier(0.22, 1, 0.36, 1);
+}
+@keyframes hsSlideIn {
+  0% { opacity: 0; transform: translateX(40px); }
+  100% { opacity: 1; transform: translateX(0); }
+}
+.hs-left > * {
+  animation: hsFadeUp 0.65s cubic-bezier(0.22, 1, 0.36, 1) backwards;
+}
+.hs-left > *:nth-child(1) { animation-delay: 0.05s; }
+.hs-left > *:nth-child(2) { animation-delay: 0.15s; }
+.hs-left > *:nth-child(3) { animation-delay: 0.25s; }
+.hs-left > *:nth-child(4) { animation-delay: 0.35s; }
+.hs-left > *:nth-child(5) { animation-delay: 0.45s; }
+@keyframes hsFadeUp {
+  0% { opacity: 0; transform: translateY(24px); }
+  100% { opacity: 1; transform: translateY(0); }
+}
+.hs-right { animation: hsZoomIn 0.9s cubic-bezier(0.22, 1, 0.36, 1) 0.2s backwards; }
+@keyframes hsZoomIn {
+  0% { opacity: 0; transform: scale(0.85); }
+  100% { opacity: 1; transform: scale(1); }
+}
+
+/* Eyebrow tag — refined glass */
+.hs-eyebrow {
+  font-size: 11px !important;
+  letter-spacing: 0.18em !important;
+  padding: 8px 18px !important;
+  border-radius: 100px !important;
+  background: linear-gradient(135deg, rgba(255,255,255,0.12), rgba(255,255,255,0.04)) !important;
+  border-width: 1px !important;
+  backdrop-filter: blur(14px) !important;
+  -webkit-backdrop-filter: blur(14px) !important;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.18), inset 0 1px 0 rgba(255,255,255,0.15) !important;
+  text-transform: uppercase !important;
+  font-weight: 700 !important;
+}
+.hs-eyebrow-dot {
+  box-shadow: 0 0 12px currentColor;
+}
+
+/* Title — better contrast and gradient on accent */
+.hs-t1 {
+  background: linear-gradient(180deg, #ffffff 0%, rgba(255,255,255,0.85) 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  text-shadow: none;
+  filter: drop-shadow(0 6px 32px rgba(0,0,0,0.35));
+}
+.hs-t2 {
+  filter: drop-shadow(0 6px 28px currentColor);
+  opacity: 0.95;
+}
+
+/* Sub text — better readability */
+.hs-sub {
+  color: rgba(255,255,255,0.78) !important;
+  text-shadow: 0 2px 8px rgba(0,0,0,0.25);
+  max-width: 480px;
+}
+
+/* Sale badge — premium glass card */
+.hs-badge {
+  background: linear-gradient(135deg, rgba(255,255,255,0.06), rgba(255,255,255,0.02)) !important;
+  border: 1px solid rgba(255,255,255,0.15) !important;
+  border-radius: 16px !important;
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  box-shadow: 0 12px 32px rgba(0,0,0,0.18), inset 0 1px 0 rgba(255,255,255,0.1);
+  position: relative;
+  overflow: hidden;
+}
+.hs-badge::before {
+  content: '';
+  position: absolute; top: 0; left: -100%;
+  width: 50%; height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255,255,255,0.15), transparent);
+  animation: hsBadgeShine 3.5s ease-in-out infinite;
+}
+@keyframes hsBadgeShine {
+  0%, 60% { left: -100%; }
+  80% { left: 200%; }
+  100% { left: 200%; }
+}
+.hs-badge-num {
+  font-size: 52px !important;
+  text-shadow: 0 4px 24px currentColor;
+  filter: drop-shadow(0 0 18px currentColor);
+}
+
+/* CTA button — refined shimmer */
+.hs-btn {
+  font-size: 14px !important;
+  font-weight: 700 !important;
+  letter-spacing: 0.3px;
+  padding: 16px 32px !important;
+  border-radius: 14px !important;
+  text-transform: none;
+  position: relative;
+  overflow: hidden;
+}
+.hs-btn:active { transform: translateY(-2px) scale(0.98); }
+
+/* Quiz button refined */
+.hs-quiz-btn {
+  font-size: 13px !important;
+  padding: 12px 22px !important;
+  border-radius: 14px !important;
+  border-width: 1.5px !important;
+  font-weight: 700 !important;
+  background: rgba(255,255,255,0.04) !important;
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+}
+.hs-quiz-icon {
+  font-size: 15px;
+  filter: drop-shadow(0 0 8px currentColor);
+}
+
+/* KPI redesign */
+.hs-kpi-item b {
+  background: linear-gradient(135deg, currentColor 0%, rgba(255,255,255,0.7) 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  filter: drop-shadow(0 2px 8px currentColor);
+}
+
+/* Right product visual polish */
+.hs-prod-img {
+  filter: drop-shadow(0 30px 60px rgba(0,0,0,0.5)) drop-shadow(0 0 80px currentColor);
+  animation: hsFloat 6s ease-in-out infinite;
+}
+@keyframes hsFloat {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-12px); }
+}
+.hs-prod-glow { animation: hsGlowPulse 4s ease-in-out infinite; }
+@keyframes hsGlowPulse {
+  0%, 100% { opacity: 0.28; transform: scale(1); }
+  50% { opacity: 0.42; transform: scale(1.1); }
+}
+
+/* Visual core — better animation */
+.hs-vcore {
+  background: radial-gradient(circle, rgba(255,255,255,0.08), transparent 70%);
+  box-shadow: 0 0 40px currentColor, inset 0 0 20px rgba(255,255,255,0.05);
+}
+
+/* Floating chips — glass premium */
+.hs-floatchip {
+  background: rgba(0,0,0,0.55) !important;
+  backdrop-filter: blur(18px) !important;
+  -webkit-backdrop-filter: blur(18px) !important;
+  border-width: 1px !important;
+  border-radius: 100px !important;
+  box-shadow: 0 12px 32px rgba(0,0,0,0.4), inset 0 1px 0 rgba(255,255,255,0.1) !important;
+  font-size: 12px !important;
+  letter-spacing: 0.3px;
+  font-weight: 700 !important;
+}
+
+/* Arrows — premium glass */
+.hs-arr {
+  background: rgba(255,255,255,0.08) !important;
+  border: 1.5px solid rgba(255,255,255,0.15) !important;
+  backdrop-filter: blur(16px) !important;
+  -webkit-backdrop-filter: blur(16px) !important;
+  width: 48px; height: 48px;
+  box-shadow: 0 8px 28px rgba(0,0,0,0.35), inset 0 1px 0 rgba(255,255,255,0.1);
+  transition: all 0.25s cubic-bezier(0.34, 1.1, 0.64, 1) !important;
+}
+.hs-arr:hover {
+  background: rgba(255,255,255,0.18) !important;
+  transform: translateY(-50%) scale(1.08) !important;
+  box-shadow: 0 12px 36px rgba(0,0,0,0.45), inset 0 1px 0 rgba(255,255,255,0.2);
+}
+.hs-arr:active {
+  transform: translateY(-50%) scale(0.96) !important;
+}
+
+/* Dots — modernized progress style */
+.hs-dots {
+  bottom: 64px !important;
+  background: rgba(0,0,0,0.35);
+  backdrop-filter: blur(10px);
+  border-radius: 100px;
+  padding: 8px 14px;
+  border: 1px solid rgba(255,255,255,0.08);
+  box-shadow: 0 8px 24px rgba(0,0,0,0.2);
+}
+.hs-dot {
+  height: 4px !important;
+  background: rgba(255,255,255,0.3) !important;
+  transition: all 0.45s cubic-bezier(0.34, 1.1, 0.64, 1) !important;
+  border-radius: 100px !important;
+}
+.hs-dot:hover { background: rgba(255,255,255,0.55) !important; }
+.hs-dot.on {
+  width: 36px !important;
+  box-shadow: 0 0 16px currentColor;
+}
+
+/* Counter polish */
+.hs-num {
+  bottom: 64px !important;
+  background: rgba(0,0,0,0.35);
+  backdrop-filter: blur(10px);
+  border-radius: 100px;
+  padding: 8px 16px;
+  border: 1px solid rgba(255,255,255,0.08);
+  box-shadow: 0 8px 24px rgba(0,0,0,0.2);
+}
+
+/* Marquee polish */
+.hs-ticker {
+  background: linear-gradient(180deg, transparent, rgba(0,0,0,0.4)) !important;
+  backdrop-filter: blur(8px);
+  height: 48px !important;
+}
+.hs-ticker-item {
+  font-size: 11px;
+  letter-spacing: 0.4em !important;
+  text-transform: uppercase;
+  font-weight: 700;
+  color: rgba(255,255,255,0.5) !important;
+}
+.hs-ticker-dot {
+  box-shadow: 0 0 12px currentColor;
+  width: 5px !important; height: 5px !important;
+}
+
+/* Image veil — better gradient overlay */
+.hs-img-veil {
+  background: linear-gradient(110deg,
+    rgba(0,0,0,0.78) 0%,
+    rgba(0,0,0,0.45) 45%,
+    rgba(0,0,0,0.15) 75%,
+    rgba(0,0,0,0.05) 100%) !important;
+}
+
+/* ============================================================
+   HERO RESPONSIVE — refined for mobile
+   ============================================================ */
+@media (max-width: 900px) {
+  .hs-dots { bottom: 70px !important; padding: 6px 12px; }
+  .hs-num { bottom: 70px !important; padding: 6px 14px; }
+  .hs-arr { width: 40px; height: 40px; }
+}
+@media (max-width: 600px) {
+  .hs-eyebrow { font-size: 10px !important; padding: 6px 14px !important; letter-spacing: 0.15em !important; }
+  .hs-badge-num { font-size: 40px !important; }
+  .hs-btn { padding: 13px 24px !important; font-size: 13px !important; }
+  .hs-quiz-btn { padding: 10px 18px !important; font-size: 12px !important; }
+  .hs-arr { width: 36px; height: 36px; }
+  .hs-arr svg { width: 14px; height: 14px; }
+  .hs-dots { padding: 5px 10px; bottom: 64px !important; }
+  .hs-dot { height: 3px !important; }
+  .hs-dot.on { width: 28px !important; }
+  .hs-num { padding: 5px 12px; bottom: 64px !important; }
+  .hs-num span:first-child { font-size: 14px !important; }
+}
+@media (max-width: 380px) {
+  .hs-num { display: none; }
+  .hs-dots { left: 50% !important; transform: translateX(-50%); }
+}
