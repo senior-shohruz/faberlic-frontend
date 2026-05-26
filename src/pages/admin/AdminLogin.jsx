@@ -3,7 +3,6 @@ import { useNavigate, Navigate } from 'react-router-dom'
 import { useAuth } from '../../context/AuthContext'
 import { useLang } from '../../context/LanguageContext'
 import LanguageSwitcher from '../../components/LanguageSwitcher'
-import BrandLogo from '../../components/BrandLogo'
 
 export default function AdminLogin() {
   const [email, setEmail] = useState('')
@@ -37,8 +36,7 @@ export default function AdminLogin() {
     <div className="al-wrap">
       <div className="al-left">
         <div className="al-brand">
-          <BrandLogo size={42} variant="light" />
-          <span className="al-brand-name" style={{ marginLeft: 12 }}>Premium Store</span>
+          <span className="al-brand-name">PREMIUM STORE</span>
         </div>
         <h1 className="al-tagline">
           {t('admin.login.tagline').split('\n').map((line, i) => (
@@ -57,7 +55,7 @@ export default function AdminLogin() {
       <div className="al-right">
         <div className="al-card">
           <div className="al-card-logo">
-            <BrandLogo size={48} />
+            <span className="al-brand-icon" style={{ width: 48, height: 48, fontSize: 11, letterSpacing: '1px', background: '#e63946', color: '#fff', borderRadius: 12 }}>PS</span>
           </div>
           <div style={{ position: 'absolute', top: 20, right: 20 }}>
             <LanguageSwitcher />
