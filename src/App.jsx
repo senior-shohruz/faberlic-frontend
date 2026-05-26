@@ -14,6 +14,7 @@ import CartSidebar from './components/CartSidebar'
 import SearchModal from './components/SearchModal'
 import SkinQuiz from './components/SkinQuiz'
 import FaceAnalyzer from './components/FaceAnalyzer'
+import AiFloatButton from './components/AiFloatButton'
 import MobileNav from './components/MobileNav'
 import LoadingScreen from './components/LoadingScreen'
 import AdminLayout from './pages/admin/AdminLayout'
@@ -55,6 +56,7 @@ function Shop() {
       </main>
       <Footer />
       <CartSidebar onRequireAuth={() => setAuthOpen(true)} />
+      <AiFloatButton onClick={() => setFaceOpen(true)} />
       <MobileNav
         onOpenSearch={() => setSearchOpen(true)}
         onOpenAuth={() => setAuthOpen(true)}
