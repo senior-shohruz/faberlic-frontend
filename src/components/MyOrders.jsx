@@ -88,6 +88,32 @@ export default function MyOrders({ onClose }) {
 
                     {isOpen && (
                       <div className="mo-order-body">
+                        {(order.userName || order.fullName || order.phone) && (
+                          <div className="mo-customer-card">
+                            <div className="mo-customer-label">
+                              <svg width="12" height="12" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+                                <path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/>
+                                <circle cx="12" cy="7" r="4"/>
+                              </svg>
+                              {t('myOrders.customer')}
+                            </div>
+                            <div className="mo-customer-rows">
+                              {(order.userName || order.fullName) && (
+                                <div className="mo-customer-row">
+                                  <span className="mo-customer-key">{t('myOrders.customerName')}:</span>
+                                  <strong className="mo-customer-val">{order.userName || order.fullName}</strong>
+                                </div>
+                              )}
+                              {order.phone && (
+                                <div className="mo-customer-row">
+                                  <span className="mo-customer-key">{t('myOrders.customerPhone')}:</span>
+                                  <a className="mo-customer-phone" href={`tel:${order.phone}`}>{order.phone}</a>
+                                </div>
+                              )}
+                            </div>
+                          </div>
+                        )}
+
                         {order.pickupPointName && (
                           <div className="mo-punkt-card">
                             <div className="mo-punkt-label">
