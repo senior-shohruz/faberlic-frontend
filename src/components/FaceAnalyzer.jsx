@@ -205,18 +205,40 @@ export default function FaceAnalyzer({ onClose, onRequireAuth }) {
 
   const startScan = async () => {
     setError('')
+
+    // Browser support check
+    if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
+      // HTTPS check
+      if (window.location.protocol !== 'https:' && window.location.hostname !== 'localhost') {
+        setError('insecure')
+      } else {
+        setError('unavailable')
+      }
+      return
+    }
+
     try {
       const stream = await navigator.mediaDevices.getUserMedia({
         video: { facingMode: 'user', width: { ideal: 640 }, height: { ideal: 480 } },
         audio: false,
       })
       streamRef.current = stream
-      if (videoRef.current) {
-        videoRef.current.srcObject = stream
-        await videoRef.current.play()
-      }
+      // Switch stage first so that <video> element exists in DOM
       setStage('scanning')
       setProgress(0)
+
+      // Wait next tick for DOM render then attach stream
+      setTimeout(async () => {
+        if (videoRef.current) {
+          videoRef.current.srcObject = stream
+          try {
+            await videoRef.current.play()
+          } catch (playErr) {
+            console.warn('play error', playErr)
+          }
+        }
+      }, 50)
+
       // animate progress
       progressTimerRef.current = setInterval(() => {
         setProgress(p => {
@@ -229,8 +251,14 @@ export default function FaceAnalyzer({ onClose, onRequireAuth }) {
         captureAndAnalyze()
       }, 3500)
     } catch (e) {
-      console.warn(e)
-      setError(e.name === 'NotAllowedError' ? 'denied' : 'unavailable')
+      console.warn('camera error', e)
+      if (e.name === 'NotAllowedError' || e.name === 'PermissionDeniedError') {
+        setError('denied')
+      } else if (e.name === 'NotFoundError' || e.name === 'DevicesNotFoundError') {
+        setError('unavailable')
+      } else {
+        setError('unavailable')
+      }
     }
   }
 
@@ -333,42 +361,41 @@ export default function FaceAnalyzer({ onClose, onRequireAuth }) {
                 </div>
               </div>
 
-              <h3 className="fa-intro-title">Sun'iy intellekt teringizni 5 soniyada tahlil qiladi</h3>
+              <h3 className="fa-intro-title">Yuzingizni 5 soniyada tahlil qilamiz</h3>
               <p className="fa-intro-sub">
-                Kamerangizdan foydalanamiz va terining holatini aniqlaymiz: namlanish darajasi, yog'lilik, qizarish va boshqalar.
-                Keyin sizga eng mos kremlar tavsiya etiladi.
+                Kamerangiz orqali teri turini aniqlaymiz va sizga eng mos kremlarni tavsiya qilamiz.
               </p>
 
               <ul className="fa-features">
-                <li><span className="fa-feature-ico">🔒</span> Rasm faqat brauzerda qoladi, hech qayoqqa yuborilmaydi</li>
-                <li><span className="fa-feature-ico">⚡</span> Tezkor — bor-yo'g'i 5 soniya</li>
+                <li><span className="fa-feature-ico">🔒</span> Maxfiy — rasm hech qayoqqa yuborilmaydi</li>
+                <li><span className="fa-feature-ico">⚡</span> 5 soniyada natija</li>
                 <li><span className="fa-feature-ico">🎯</span> Shaxsiy mahsulot tavsiyalari</li>
               </ul>
 
               {error === 'denied' && (
                 <div className="fa-error">
-                  <span>⚠️</span> Kamera ruxsati berilmadi. Brauzer sozlamalaridan kameraga ruxsat bering.
+                  <span>⚠️</span> Kamera ruxsati berilmadi. Brauzer sozlamalaridan kameraga ruxsat bering va qayta urining.
                 </div>
               )}
               {error === 'unavailable' && (
                 <div className="fa-error">
-                  <span>⚠️</span> Kamera topilmadi yoki ishlamayapti.
+                  <span>⚠️</span> Kamera topilmadi. Iltimos, qurilmangizda kamera mavjudligini tekshiring.
                 </div>
               )}
               {error === 'noface' && (
                 <div className="fa-error">
-                  <span>⚠️</span> Yuz aniqlanmadi. Yaxshi yorug'likda yuzingizni kameraga to'g'rilang.
+                  <span>⚠️</span> Yuz aniqlanmadi. Yorug' joyda yuzingizni doiraga to'g'ridan-to'g'ri qarating va qayta urining.
+                </div>
+              )}
+              {error === 'insecure' && (
+                <div className="fa-error">
+                  <span>⚠️</span> Kamera faqat HTTPS sayt orqali ishlaydi. Iltimos, sayt manzilida HTTPS borligini tekshiring.
                 </div>
               )}
 
-              <button className="fa-cta" onClick={startScan}>
-                <span className="fa-cta-icon">📸</span>
-                Skanerni boshlash
-                <svg width="16" height="16" fill="none" stroke="currentColor" strokeWidth="2.5" viewBox="0 0 24 24">
-                  <path d="M5 12h14M12 5l7 7-7 7" />
-                </svg>
-              </button>
-              <p className="fa-disclaimer">Tavsiyalar maslahat sifatida xizmat qiladi va dermatolog ko'rigi o'rnini bosmaydi.</p>
+              <p className="fa-disclaimer">
+                Tavsiyalar ma'lumot uchun, dermatolog ko'rigi o'rnini bosmaydi.
+              </p>
             </div>
           )}
 
@@ -501,18 +528,32 @@ export default function FaceAnalyzer({ onClose, onRequireAuth }) {
                   </div>
                 )}
               </div>
-
-              <div className="fa-result-actions">
-                <button className="fa-restart" onClick={restart}>
-                  <svg width="14" height="14" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24"><polyline points="23 4 23 10 17 10" /><path d="M20.49 15a9 9 0 11-2.12-9.36L23 10" /></svg>
-                  Qayta skanerlash
-                </button>
-                <button className="fa-finish" onClick={handleClose}>Tushunarli ✓</button>
-              </div>
             </div>
           )}
 
         </div>
+
+        {/* Sticky footer with action — always visible */}
+        {stage === 'intro' && (
+          <div className="fa-foot">
+            <button className="fa-cta" onClick={startScan}>
+              <span className="fa-cta-icon">📸</span>
+              Skanerni boshlash
+              <svg width="16" height="16" fill="none" stroke="currentColor" strokeWidth="2.5" viewBox="0 0 24 24">
+                <path d="M5 12h14M12 5l7 7-7 7" />
+              </svg>
+            </button>
+          </div>
+        )}
+        {stage === 'result' && (
+          <div className="fa-foot fa-foot-result">
+            <button className="fa-restart" onClick={restart}>
+              <svg width="14" height="14" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24"><polyline points="23 4 23 10 17 10" /><path d="M20.49 15a9 9 0 11-2.12-9.36L23 10" /></svg>
+              Qayta skan
+            </button>
+            <button className="fa-finish" onClick={handleClose}>Tushunarli ✓</button>
+          </div>
+        )}
       </div>
     </div>,
     document.body

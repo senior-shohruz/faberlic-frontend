@@ -8432,3 +8432,40 @@ html, body { overflow-x: hidden; max-width: 100vw; }
 @media (max-width: 640px) {
   .tg-float { bottom: calc(140px + env(safe-area-inset-bottom)); }
 }
+
+
+/* ============================================================
+   FACE ANALYZER — STICKY FOOTER (always-visible CTA)
+   ============================================================ */
+.fa-modal {
+  display: flex;
+  flex-direction: column;
+}
+.fa-body {
+  flex: 1 1 auto;
+  min-height: 0;
+}
+.fa-foot {
+  flex-shrink: 0;
+  padding: 16px 22px calc(18px + env(safe-area-inset-bottom));
+  background: linear-gradient(180deg, transparent, rgba(15,15,26,0.95) 30%);
+  border-top: 1px solid rgba(255,255,255,0.06);
+  display: flex; align-items: center; gap: 10px;
+}
+.fa-foot .fa-cta {
+  width: 100%;
+  margin: 0;
+  justify-content: center;
+}
+.fa-foot-result { gap: 10px; }
+.fa-foot-result .fa-restart,
+.fa-foot-result .fa-finish { flex: 1; margin-top: 0; }
+
+/* Hide intro CTA when shown in sticky footer (avoid duplicates) */
+.fa-intro .fa-cta { display: none; }
+.fa-result .fa-result-actions { display: none; }
+
+/* Mobile: fully bottom-sheet */
+@media (max-width: 640px) {
+  .fa-foot { padding: 14px 18px calc(16px + env(safe-area-inset-bottom)); }
+}
