@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import { useLang } from '../context/LanguageContext'
 import { useToast } from '../context/ToastContext'
+import BrandLogo from './BrandLogo'
 
 export default function Footer() {
   const { t } = useLang()
@@ -46,7 +47,7 @@ export default function Footer() {
       <div className="footer-inner">
         <div className="footer-brand">
           <a href="#" className="logo footer-logo">
-            <span className="logo-text">PREMIUM STORE</span>
+            <BrandLogo variant="light" size="md" />
           </a>
           <p className="footer-brand-desc">{t('footer.brandDesc')}</p>
           <div className="footer-socials">
