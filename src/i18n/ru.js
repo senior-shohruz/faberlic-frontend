@@ -24,7 +24,7 @@ const ru = {
       },
       {
         title: ["НОВАЯ", "КОЛЛЕКЦИЯ"],
-        desc: "ВЕСНОЙ — НОВЫЕ КРАСКИ, НОВОЕ НАСТРОЕНИЕ. ОБНОВИТЕ BEAUTY-РУТИНУ С KOSМЕТИКОЙ FABERLIC",
+        desc: "ВЕСНОЙ — НОВЫЕ КРАСКИ, НОВОЕ НАСТРОЕНИЕ. ОБНОВИТЕ BEAUTY-РУТИНУ С KOSМЕТИКОЙ PREMIUM STORE",
         badge: "-30%", badgeSub: "ДО", btn: "Купить сейчас!",
       },
       {
@@ -34,7 +34,7 @@ const ru = {
       },
       {
         title: ["КОЛЛЕКЦИЯ", "АРОМАТОВ"],
-        desc: "ДОБРО ПОЖАЛОВАТЬ В МИР ВОЛШЕБНЫХ АРОМАТОВ. ПАРФЮМЕРИЯ FABERLIC — ВЫРАЖАЙТЕ СЕБЯ",
+        desc: "ДОБРО ПОЖАЛОВАТЬ В МИР ВОЛШЕБНЫХ АРОМАТОВ. ПАРФЮМЕРИЯ PREMIUM STORE — ВЫРАЖАЙТЕ СЕБЯ",
         badge: "-25%", badgeSub: "ДО", btn: "Открыть ароматы",
       },
     ],
@@ -160,7 +160,7 @@ const ru = {
       address: "г. Ташкент, Чиланзарский р-н",
       telegramSupport: "Telegram поддержка",
     },
-    copyright: "© 2025 Faberlic Shop. Все права защищены.",
+    copyright: "© 2025 Premium Store. Все права защищены.",
     privacy: "Политика конфиденциальности",
     terms: "Условия использования",
   },
@@ -267,10 +267,10 @@ const ru = {
   admin: {
     login: {
       tagline: "Профессиональное\nУправление",
-      subtitle: "Панель управления Faberlic Shop — быстро, безопасно и удобно",
+      subtitle: "Панель управления Premium Store — быстро, безопасно и удобно",
       features: ["Полная статистика", "Управление товарами", "Контроль заказов"],
       email: "Email адрес",
-      emailPlaceholder: "admin@faberlic.com",
+      emailPlaceholder: "admin@premiumstore.com",
       password: "Пароль",
       passwordPlaceholder: "Ваш пароль",
       submit: "Войти",

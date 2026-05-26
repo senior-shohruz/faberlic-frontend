@@ -36,8 +36,8 @@ export default function AdminLayout() {
           </svg>
         </button>
         <div className="adm-topbar-brand">
-          <span className="adm-topbar-logo">F</span>
-          <span className="adm-topbar-name">aberlic <span>Admin</span></span>
+          <span className="adm-topbar-logo">P</span>
+          <span className="adm-topbar-name">remium Store <span>Admin</span></span>
         </div>
         <div className="adm-topbar-avatar" onClick={handleLogout} title="Chiqish">
           {user?.name?.[0]?.toUpperCase()}
@@ -53,9 +53,9 @@ export default function AdminLayout() {
       <aside className={`adm-sidebar${sidebarOpen ? ' adm-sidebar-open' : ''}`}>
         <div className="adm-sidebar-head">
           <div className="adm-logo">
-            <span className="logo-icon" style={{ width: 36, height: 36, fontSize: 17 }}>F</span>
+            <span className="logo-icon" style={{ width: 36, height: 36, fontSize: 17 }}>P</span>
             <div>
-              <div className="adm-logo-text">aberlic.</div>
+              <div className="adm-logo-text">remium Store.</div>
               <div className="adm-logo-sub">Admin Panel</div>
             </div>
           </div>

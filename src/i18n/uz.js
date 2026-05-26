@@ -24,7 +24,7 @@ const uz = {
       },
       {
         title: ["YANGI", "KOLLEKSIYA"],
-        desc: "BAHORDA YANGI RANGLAR, YANGI KAYFIYAT. FABERLIC KOSMETIKASI BILAN BEAUTY RUTININGIZNI YANGILANG",
+        desc: "BAHORDA YANGI RANGLAR, YANGI KAYFIYAT. PREMIUM STORE KOSMETIKASI BILAN BEAUTY RUTININGIZNI YANGILANG",
         badge: "-30%", badgeSub: "GACHA", btn: "Hozir xarid qiling!",
       },
       {
@@ -34,7 +34,7 @@ const uz = {
       },
       {
         title: ["ATIR", "KOLLEKSIYASI"],
-        desc: "SEHRLI HIDLAR OLAMIGA XUSH KELIBSIZ. FABERLIC PARFYUMERIYASI — HIS-TUYG'ULARINGIZNI IFODALANG",
+        desc: "SEHRLI HIDLAR OLAMIGA XUSH KELIBSIZ. PREMIUM STORE PARFYUMERIYASI — HIS-TUYG'ULARINGIZNI IFODALANG",
         badge: "-25%", badgeSub: "GACHA", btn: "Hidlarni kashf et",
       },
     ],
@@ -160,7 +160,7 @@ const uz = {
       address: "Toshkent sh., Chilonzor t.",
       telegramSupport: "Telegram support",
     },
-    copyright: "© 2025 Faberlic Shop. Barcha huquqlar himoyalangan.",
+    copyright: "© 2025 Premium Store. Barcha huquqlar himoyalangan.",
     privacy: "Maxfiylik siyosati",
     terms: "Foydalanish shartlari",
   },
@@ -267,10 +267,10 @@ const uz = {
   admin: {
     login: {
       tagline: "Professional\nBoshqaruv",
-      subtitle: "Faberlic Shop boshqaruv paneli — tez, xavfsiz va qulay",
+      subtitle: "Premium Store boshqaruv paneli — tez, xavfsiz va qulay",
       features: ["To'liq statistika", "Mahsulot boshqaruvi", "Buyurtmalar nazorati"],
       email: "Email manzil",
-      emailPlaceholder: "admin@faberlic.com",
+      emailPlaceholder: "admin@premiumstore.com",
       password: "Parol",
       passwordPlaceholder: "Parolingiz",
       submit: "Kirish",

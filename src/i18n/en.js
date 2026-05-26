@@ -24,7 +24,7 @@ const en = {
       },
       {
         title: ["NEW", "COLLECTION"],
-        desc: "SPRING NEW COLORS, NEW MOOD. REFRESH YOUR BEAUTY ROUTINE WITH FABERLIC COSMETICS",
+        desc: "SPRING NEW COLORS, NEW MOOD. REFRESH YOUR BEAUTY ROUTINE WITH PREMIUM STORE COSMETICS",
         badge: "-30%", badgeSub: "UP TO", btn: "Shop now!",
       },
       {
@@ -34,7 +34,7 @@ const en = {
       },
       {
         title: ["FRAGRANCE", "COLLECTION"],
-        desc: "WELCOME TO THE WORLD OF MAGICAL SCENTS. FABERLIC PERFUMERY — EXPRESS YOUR FEELINGS",
+        desc: "WELCOME TO THE WORLD OF MAGICAL SCENTS. PREMIUM STORE PERFUMERY — EXPRESS YOUR FEELINGS",
         badge: "-25%", badgeSub: "UP TO", btn: "Discover fragrances",
       },
     ],
@@ -160,7 +160,7 @@ const en = {
       address: "Tashkent, Chilanzar district",
       telegramSupport: "Telegram support",
     },
-    copyright: "© 2025 Faberlic Shop. All rights reserved.",
+    copyright: "© 2025 Premium Store. All rights reserved.",
     privacy: "Privacy Policy",
     terms: "Terms of Use",
   },
@@ -267,10 +267,10 @@ const en = {
   admin: {
     login: {
       tagline: "Professional\nManagement",
-      subtitle: "Faberlic Shop admin panel — fast, secure and convenient",
+      subtitle: "Premium Store admin panel — fast, secure and convenient",
       features: ["Full analytics", "Product management", "Order control"],
       email: "Email address",
-      emailPlaceholder: "admin@faberlic.com",
+      emailPlaceholder: "admin@premiumstore.com",
       password: "Password",
       passwordPlaceholder: "Your password",
       submit: "Sign in",

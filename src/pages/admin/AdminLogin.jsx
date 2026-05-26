@@ -36,8 +36,8 @@ export default function AdminLogin() {
     <div className="al-wrap">
       <div className="al-left">
         <div className="al-brand">
-          <span className="al-brand-icon">F</span>
-          <span className="al-brand-name">aberlic</span>
+          <span className="al-brand-icon">P</span>
+          <span className="al-brand-name">remium Store</span>
           <span className="al-brand-dot">.</span>
         </div>
         <h1 className="al-tagline">
@@ -57,7 +57,7 @@ export default function AdminLogin() {
       <div className="al-right">
         <div className="al-card">
           <div className="al-card-logo">
-            <span className="logo-icon" style={{ width: 40, height: 40, fontSize: 20 }}>F</span>
+            <span className="logo-icon" style={{ width: 40, height: 40, fontSize: 20 }}>P</span>
           </div>
           <div style={{ position: 'absolute', top: 20, right: 20 }}>
             <LanguageSwitcher />

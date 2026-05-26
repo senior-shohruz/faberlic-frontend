@@ -42,8 +42,8 @@ export default function Header({ onOpenAuth, onOpenCart, onOpenSearch }) {
     <div className={`header-wrap ${scrolled ? 'scrolled' : ''}`}>
       <header className="header">
         <a href="/" className="logo">
-          <span className="logo-icon">F</span>
-          <span className="logo-text">aberlic</span>
+          <span className="logo-icon">P</span>
+          <span className="logo-text">remium Store</span>
           <span className="logo-dot">.</span>
         </a>
 
