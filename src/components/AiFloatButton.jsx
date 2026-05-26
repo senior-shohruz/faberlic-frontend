@@ -1,7 +1,16 @@
-// Floating AI Skin Scan button — always visible, bottom-right
+import { useLang } from '../context/LanguageContext'
+
+const TXT = {
+  tag:  { uz: 'AI',          ru: 'AI',          en: 'AI' },
+  text: { uz: 'Skin Scan',   ru: 'Skin Scan',   en: 'Skin Scan' },
+  aria: { uz: 'AI Skin Scan', ru: 'AI Skin Scan', en: 'AI Skin Scan' },
+}
+
 export default function AiFloatButton({ onClick }) {
+  const { lang } = useLang()
+  const tx = (k) => TXT[k][lang] || TXT[k].uz
   return (
-    <button className="ai-float" onClick={onClick} aria-label="AI Skin Scan" title="AI Skin Scan">
+    <button className="ai-float" onClick={onClick} aria-label={tx('aria')} title={tx('aria')}>
       <span className="ai-float-pulse" />
       <span className="ai-float-pulse ai-float-pulse-2" />
       <span className="ai-float-icon">
@@ -13,8 +22,8 @@ export default function AiFloatButton({ onClick }) {
         </svg>
       </span>
       <span className="ai-float-label">
-        <span className="ai-float-tag">AI</span>
-        <span className="ai-float-text">Skin Scan</span>
+        <span className="ai-float-tag">{tx('tag')}</span>
+        <span className="ai-float-text">{tx('text')}</span>
       </span>
     </button>
   )

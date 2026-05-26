@@ -1,7 +1,16 @@
-// Floating AI Chat button — bottom-right, above AI Skin Scan
+import { useLang } from '../context/LanguageContext'
+
+const TXT = {
+  tag:  { uz: 'AI',         ru: 'AI',         en: 'AI' },
+  text: { uz: 'Chat',       ru: 'Чат',        en: 'Chat' },
+  aria: { uz: 'AI Chat',    ru: 'AI Чат',     en: 'AI Chat' },
+}
+
 export default function AiChatButton({ onClick }) {
+  const { lang } = useLang()
+  const tx = (k) => TXT[k][lang] || TXT[k].uz
   return (
-    <button className="aic-float" onClick={onClick} aria-label="AI Chat" title="Premium AI Chat">
+    <button className="aic-float" onClick={onClick} aria-label={tx('aria')} title={tx('aria')}>
       <span className="aic-float-pulse" />
       <span className="aic-float-icon">
         <svg width="22" height="22" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
@@ -12,8 +21,8 @@ export default function AiChatButton({ onClick }) {
         </svg>
       </span>
       <span className="aic-float-label">
-        <span className="aic-float-tag">AI</span>
-        <span className="aic-float-text">Chat</span>
+        <span className="aic-float-tag">{tx('tag')}</span>
+        <span className="aic-float-text">{tx('text')}</span>
       </span>
     </button>
   )

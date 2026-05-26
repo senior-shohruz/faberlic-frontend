@@ -186,7 +186,80 @@ export default function FaceAnalyzer({ onClose, onRequireAuth }) {
   const { addItem } = useCart()
   const { user } = useAuth()
   const { addToast } = useToast()
-  const { t } = useLang()
+  const { t, lang } = useLang()
+
+  const TX = {
+    badge:        { uz: 'AI BEAUTY SCAN',                 ru: 'AI BEAUTY SCAN',                       en: 'AI BEAUTY SCAN' },
+    titleIntro:   { uz: 'AI Yuz tahlili',                 ru: 'AI Анализ лица',                       en: 'AI Face Analysis' },
+    titleScan:    { uz: 'Skanerlash',                     ru: 'Сканирование',                         en: 'Scanning' },
+    titleAnalyze: { uz: 'Tahlil qilinmoqda',              ru: 'Анализируем',                          en: 'Analyzing' },
+    titleResult:  { uz: 'Sizning teri tahlilingiz',       ru: 'Ваш анализ кожи',                      en: 'Your skin analysis' },
+    introTitle:   { uz: 'Yuzingizni 5 soniyada tahlil qilamiz',
+                    ru: 'Анализируем ваше лицо за 5 секунд',
+                    en: 'We analyze your face in 5 seconds' },
+    introSub:     { uz: 'Kameradan foydalanib, terining holatini aniqlaymiz va sizga eng mos kremlarni tavsiya qilamiz.',
+                    ru: 'С помощью камеры определяем состояние кожи и подбираем подходящий крем.',
+                    en: 'Using your camera we detect your skin condition and recommend the best creams.' },
+    feat1:        { uz: 'Maxfiy — rasm hech qayoqqa yuborilmaydi', ru: 'Конфиденциально — изображение никуда не отправляется', en: 'Private — image stays in your browser' },
+    feat2:        { uz: "5 soniyada to'liq natija",                ru: 'Полный результат за 5 секунд',                       en: 'Full result in 5 seconds' },
+    feat3:        { uz: 'Shaxsiy mahsulot tavsiyalari',            ru: 'Персональные рекомендации',                          en: 'Personalized recommendations' },
+    errDenied:    { uz: 'Kamera ruxsati berilmadi.',               ru: 'Доступ к камере запрещён.',                          en: 'Camera permission denied.' },
+    errDeniedSub: { uz: "Brauzer manzil paneli yoniga bosing → Kamera → Allow / Ruxsat bering, va qayta urinib ko'ring.",
+                    ru: 'Нажмите на адресную строку → Камера → Разрешить, и попробуйте снова.',
+                    en: 'Click the address bar → Camera → Allow, then try again.' },
+    errUnavail:   { uz: 'Kamera topilmadi. Iltimos, qurilmangizda kamera mavjudligini tekshiring.',
+                    ru: 'Камера не найдена. Проверьте, что камера доступна.',
+                    en: 'Camera not found. Please check camera availability.' },
+    errBusy:      { uz: 'Kamera boshqa ilova tomonidan ishlatilmoqda. Telegram, Zoom kabi ilovalarni yoping.',
+                    ru: 'Камера используется другим приложением. Закройте Telegram, Zoom и т.п.',
+                    en: 'Camera is used by another app. Close Telegram, Zoom, etc.' },
+    errNoFace:    { uz: "Yuz aniqlanmadi. Yorug' joyda yuzingizni doiraga to'g'rilang va qayta urining.",
+                    ru: 'Лицо не обнаружено. Встаньте к свету и снова поднесите лицо к кадру.',
+                    en: "Face not detected. Move to better lighting and align your face." },
+    errInsecure:  { uz: 'Kamera faqat HTTPS sayt orqali ishlaydi.',
+                    ru: 'Камера работает только на HTTPS.',
+                    en: 'Camera works only on HTTPS sites.' },
+    disclaimer:   { uz: "Tavsiyalar maslahat sifatida xizmat qiladi va dermatolog ko'rigi o'rnini bosmaydi.",
+                    ru: 'Рекомендации информативные и не заменяют визит к дерматологу.',
+                    en: 'Recommendations are informational and do not replace a dermatologist visit.' },
+    btnStart:     { uz: 'Skanerni boshlash',                       ru: 'Начать сканирование',                                en: 'Start scan' },
+    btnRestart:   { uz: 'Qayta skan',                              ru: 'Заново',                                              en: 'Rescan' },
+    btnDone:      { uz: 'Tushunarli ✓',                            ru: 'Готово ✓',                                            en: 'Done ✓' },
+    hintAlign:    { uz: "Yuzingizni doiraga to'g'rilang",          ru: 'Поместите лицо в круг',                              en: 'Center your face in the circle' },
+    progress:     { uz: 'Skaner ishlamoqda',                       ru: 'Идёт сканирование',                                  en: 'Scanning' },
+    analyzing:    { uz: 'AI tahlil qilmoqda…',                     ru: 'AI анализирует…',                                    en: 'AI is analyzing…' },
+    analyzingSub: { uz: 'Teri turingiz va ehtiyojlaringiz aniqlanmoqda',
+                    ru: 'Определяем тип кожи и потребности',
+                    en: 'Detecting your skin type and needs' },
+    step1:        { uz: 'Yuz aniqlash',                            ru: 'Распознавание лица',                                 en: 'Face detection' },
+    step2:        { uz: 'Teri rangi',                              ru: 'Тон кожи',                                            en: 'Skin tone' },
+    step3:        { uz: 'T-zona tahlili',                          ru: 'Анализ T-зоны',                                       en: 'T-zone analysis' },
+    step4:        { uz: 'Mos kremlar',                             ru: 'Подбор кремов',                                       en: 'Matching creams' },
+    skinLabel:    { uz: 'Aniqlangan teri turi',                    ru: 'Определённый тип кожи',                               en: 'Detected skin type' },
+    skinOily:     { uz: "Yog'li teri",                             ru: 'Жирная кожа',                                         en: 'Oily skin' },
+    skinDry:      { uz: 'Quruq teri',                              ru: 'Сухая кожа',                                          en: 'Dry skin' },
+    skinCombo:    { uz: 'Kombinatsiya',                            ru: 'Комбинированная',                                     en: 'Combination' },
+    skinNormal:   { uz: 'Normal teri',                             ru: 'Нормальная кожа',                                     en: 'Normal skin' },
+    confidence:   { uz: 'Aniqlik',                                 ru: 'Точность',                                            en: 'Confidence' },
+    metricH:      { uz: 'Namlanish',                               ru: 'Увлажнение',                                          en: 'Hydration' },
+    metricO:      { uz: "Yog'lilik",                               ru: 'Жирность',                                            en: 'Oiliness' },
+    metricR:      { uz: 'Qizarish',                                ru: 'Покраснение',                                         en: 'Redness' },
+    statusGood:   { uz: '✓ Yaxshi',                                ru: '✓ Хорошо',                                            en: '✓ Good' },
+    statusMid:    { uz: "~ O'rta",                                 ru: '~ Средне',                                            en: '~ Average' },
+    statusHigh:   { uz: '! Yuqori',                                ru: '! Высокое',                                           en: '! High' },
+    statusLow:    { uz: '! Past',                                  ru: '! Низкое',                                            en: '! Low' },
+    concernsLbl:  { uz: 'Asosiy ehtiyojlar:',                      ru: 'Основные потребности:',                              en: 'Main needs:' },
+    concMoisture: { uz: '💦 Namlanish',                            ru: '💦 Увлажнение',                                       en: '💦 Hydration' },
+    concOily:     { uz: "🛢️ Yog'lilikni nazorat",                  ru: '🛢️ Контроль жирности',                                en: '🛢️ Oil control' },
+    concRedness:  { uz: '🔴 Qizarish',                             ru: '🔴 Покраснение',                                      en: '🔴 Redness' },
+    concSpots:    { uz: '⚪ Bir tekis ranglilik',                   ru: '⚪ Ровный тон',                                        en: '⚪ Even tone' },
+    concBalance:  { uz: '✅ Muvozanat',                             ru: '✅ Баланс',                                            en: '✅ Balanced' },
+    recTitle:     { uz: 'Sizga tavsiya etilgan kremlar',           ru: 'Рекомендуемые кремы',                                en: 'Recommended creams' },
+    recEmpty:     { uz: 'Hozircha mos mahsulot topilmadi.',        ru: 'Пока не нашли подходящий товар.',                    en: 'No matching products yet.' },
+    addedToast:   { uz: "Savatga qo'shildi",                       ru: 'Добавлено в корзину',                                en: 'Added to cart' },
+    closeAria:    { uz: 'Yopish',                                  ru: 'Закрыть',                                             en: 'Close' },
+  }
+  const tx = (key) => (TX[key] && TX[key][lang]) || TX[key]?.uz || key
 
   /* lock body scroll */
   useEffect(() => {
@@ -369,7 +442,7 @@ export default function FaceAnalyzer({ onClose, onRequireAuth }) {
   const handleAdd = (p) => {
     if (!user) { onRequireAuth?.(); handleClose(); return }
     addItem(p)
-    addToast(`${p.emoji || '🛍️'} Savatga qo'shildi`, 'success')
+    addToast(`${p.emoji || '🛍️'} ${tx('addedToast')}`, 'success')
   }
 
   const restart = () => {
@@ -397,16 +470,16 @@ export default function FaceAnalyzer({ onClose, onRequireAuth }) {
           <div className="fa-head-left">
             <span className="fa-head-badge">
               <span className="fa-head-dot" />
-              AI BEAUTY SCAN
+              {tx('badge')}
             </span>
             <h2 className="fa-head-title">
-              {stage === 'result' ? 'Sizning teri tahlilingiz' :
-               stage === 'scanning' ? 'Skanerlash' :
-               stage === 'analyzing' ? 'Tahlil qilinmoqda' :
-               'AI Yuz tahlili'}
+              {stage === 'result' ? tx('titleResult') :
+               stage === 'scanning' ? tx('titleScan') :
+               stage === 'analyzing' ? tx('titleAnalyze') :
+               tx('titleIntro')}
             </h2>
           </div>
-          <button className="fa-close" onClick={handleClose} aria-label="Yopish">
+          <button className="fa-close" onClick={handleClose} aria-label={tx('closeAria')}>
             <svg width="16" height="16" fill="none" stroke="currentColor" strokeWidth="2.5" viewBox="0 0 24 24">
               <path d="M18 6L6 18M6 6l12 12" />
             </svg>
@@ -434,49 +507,49 @@ export default function FaceAnalyzer({ onClose, onRequireAuth }) {
                 </div>
               </div>
 
-              <h3 className="fa-intro-title">Yuzingizni 5 soniyada tahlil qilamiz</h3>
+              <h3 className="fa-intro-title">{tx('introTitle')}</h3>
               <p className="fa-intro-sub">
-                Kameradan foydalanib, terining holatini aniqlaymiz va sizga eng mos kremlarni tavsiya qilamiz.
+                {tx('introSub')}
               </p>
 
               <ul className="fa-features">
-                <li><span className="fa-feature-ico">🔒</span> Maxfiy — rasm hech qayoqqa yuborilmaydi</li>
-                <li><span className="fa-feature-ico">⚡</span> 5 soniyada to'liq natija</li>
-                <li><span className="fa-feature-ico">🎯</span> Shaxsiy mahsulot tavsiyalari</li>
+                <li><span className="fa-feature-ico">🔒</span> {tx('feat1')}</li>
+                <li><span className="fa-feature-ico">⚡</span> {tx('feat2')}</li>
+                <li><span className="fa-feature-ico">🎯</span> {tx('feat3')}</li>
               </ul>
 
               {error === 'denied' && (
                 <div className="fa-error">
                   <span>⚠️</span>
                   <div>
-                    <strong>Kamera ruxsati berilmadi.</strong><br />
-                    Brauzer manzil paneli yoniga bosing → Kamera → Allow / Ruxsat bering, va qayta urinib ko'ring.
+                    <strong>{tx('errDenied')}</strong><br />
+                    {tx('errDeniedSub')}
                   </div>
                 </div>
               )}
               {error === 'unavailable' && (
                 <div className="fa-error">
-                  <span>⚠️</span> Kamera topilmadi. Iltimos, qurilmangizda kamera mavjudligini va ishlayotganini tekshiring.
+                  <span>⚠️</span> {tx('errUnavail')}
                 </div>
               )}
               {error === 'busy' && (
                 <div className="fa-error">
-                  <span>⚠️</span> Kamera boshqa ilova tomonidan ishlatilmoqda. Telegram, Zoom kabi ilovalarni yoping va qayta urining.
+                  <span>⚠️</span> {tx('errBusy')}
                 </div>
               )}
               {error === 'noface' && (
                 <div className="fa-error">
-                  <span>⚠️</span> Yuz aniqlanmadi. Yorug' joyda yuzingizni doiraga to'g'rilang va qayta urinib ko'ring.
+                  <span>⚠️</span> {tx('errNoFace')}
                 </div>
               )}
               {error === 'insecure' && (
                 <div className="fa-error">
-                  <span>⚠️</span> Kamera faqat HTTPS sayt orqali ishlaydi. Iltimos, sayt manzilida HTTPS borligini tekshiring.
+                  <span>⚠️</span> {tx('errInsecure')}
                 </div>
               )}
 
               <p className="fa-disclaimer">
-                Tavsiyalar maslahat sifatida xizmat qiladi va dermatolog ko'rigi o'rnini bosmaydi.
+                {tx('disclaimer')}
               </p>
             </div>
           )}
@@ -495,11 +568,11 @@ export default function FaceAnalyzer({ onClose, onRequireAuth }) {
                     <div className="fa-scanline" />
                   </div>
                 </div>
-                <div className="fa-cam-hint">Yuzingizni doiraga to'g'rilang</div>
+                <div className="fa-cam-hint">{tx('hintAlign')}</div>
               </div>
               <div className="fa-progress-wrap">
                 <div className="fa-progress-info">
-                  <span className="fa-progress-label">Skaner ishlamoqda</span>
+                  <span className="fa-progress-label">{tx('progress')}</span>
                   <span className="fa-progress-pct">{Math.min(100, Math.round(progress))}%</span>
                 </div>
                 <div className="fa-progress-track">
@@ -522,13 +595,13 @@ export default function FaceAnalyzer({ onClose, onRequireAuth }) {
                   </svg>
                 </div>
               </div>
-              <p className="fa-think-title">AI tahlil qilmoqda…</p>
-              <p className="fa-think-sub">Teri turingiz va ehtiyojlaringiz aniqlanmoqda</p>
+              <p className="fa-think-title">{tx('analyzing')}</p>
+              <p className="fa-think-sub">{tx('analyzingSub')}</p>
               <div className="fa-think-steps">
-                <span className="fa-think-step active">Yuz aniqlash</span>
-                <span className="fa-think-step active">Teri rangi</span>
-                <span className="fa-think-step active">T-zona tahlili</span>
-                <span className="fa-think-step active">Mos kremlar</span>
+                <span className="fa-think-step active">{tx('step1')}</span>
+                <span className="fa-think-step active">{tx('step2')}</span>
+                <span className="fa-think-step active">{tx('step3')}</span>
+                <span className="fa-think-step active">{tx('step4')}</span>
               </div>
               <canvas ref={canvasRef} style={{ display: 'none' }} />
             </div>
@@ -545,35 +618,35 @@ export default function FaceAnalyzer({ onClose, onRequireAuth }) {
                    analysis.skinType === 'combo' ? '🔄' : '✨'}
                 </div>
                 <div>
-                  <p className="fa-result-label">Aniqlangan teri turi</p>
+                  <p className="fa-result-label">{tx('skinLabel')}</p>
                   <h3 className="fa-result-type">
-                    {analysis.skinType === 'oily' ? "Yog'li teri" :
-                     analysis.skinType === 'dry' ? 'Quruq teri' :
-                     analysis.skinType === 'combo' ? 'Kombinatsiya' : 'Normal teri'}
+                    {analysis.skinType === 'oily' ? tx('skinOily') :
+                     analysis.skinType === 'dry' ? tx('skinDry') :
+                     analysis.skinType === 'combo' ? tx('skinCombo') : tx('skinNormal')}
                   </h3>
                   <p className="fa-result-conf">
-                    Aniqlik: <strong>{analysis.confidence}%</strong>
+                    {tx('confidence')}: <strong>{analysis.confidence}%</strong>
                   </p>
                 </div>
               </div>
 
               <div className="fa-metrics">
-                <Metric label="Namlanish" value={analysis.hydration} color="#3b82f6" suffix="%" />
-                <Metric label="Yog'lilik" value={analysis.oilLevel} color="#f59e0b" suffix="%" invert />
-                <Metric label="Qizarish" value={analysis.rednessLevel} color="#ef4444" suffix="%" invert />
+                <Metric label={tx('metricH')} value={analysis.hydration} color="#3b82f6" suffix="%" lang={lang} />
+                <Metric label={tx('metricO')} value={analysis.oilLevel}  color="#f59e0b" suffix="%" invert lang={lang} />
+                <Metric label={tx('metricR')} value={analysis.rednessLevel} color="#ef4444" suffix="%" invert lang={lang} />
               </div>
 
               {analysis.concerns?.length > 0 && analysis.concerns[0] !== 'balanced' && (
                 <div className="fa-concerns">
-                  <p className="fa-concerns-label">Asosiy ehtiyojlar:</p>
+                  <p className="fa-concerns-label">{tx('concernsLbl')}</p>
                   <div className="fa-concern-pills">
                     {analysis.concerns.map(c => (
                       <span key={c} className={`fa-concern fa-concern-${c}`}>
-                        {c === 'moisture' ? '💦 Namlanish' :
-                         c === 'oily' ? "🛢️ Yog'lilikni nazorat" :
-                         c === 'redness' ? '🔴 Qizarish' :
-                         c === 'spots' ? "⚪ Bir tekis ranglilik" :
-                         "✅ Muvozanat"}
+                        {c === 'moisture' ? tx('concMoisture') :
+                         c === 'oily' ? tx('concOily') :
+                         c === 'redness' ? tx('concRedness') :
+                         c === 'spots' ? tx('concSpots') :
+                         tx('concBalance')}
                       </span>
                     ))}
                   </div>
@@ -583,10 +656,10 @@ export default function FaceAnalyzer({ onClose, onRequireAuth }) {
               <div className="fa-rec">
                 <h4 className="fa-rec-title">
                   <span className="fa-rec-icon">🎯</span>
-                  Sizga tavsiya etilgan kremlar
+                  {tx('recTitle')}
                 </h4>
                 {recommendations.length === 0 ? (
-                  <p className="fa-rec-empty">Hozircha mos mahsulot topilmadi.</p>
+                  <p className="fa-rec-empty">{tx('recEmpty')}</p>
                 ) : (
                   <div className="fa-rec-grid">
                     {recommendations.map(p => (
@@ -619,7 +692,7 @@ export default function FaceAnalyzer({ onClose, onRequireAuth }) {
           <div className="fa-foot">
             <button className="fa-cta" onClick={startScan}>
               <span className="fa-cta-icon">📸</span>
-              Skanerni boshlash
+              {tx('btnStart')}
               <svg width="16" height="16" fill="none" stroke="currentColor" strokeWidth="2.5" viewBox="0 0 24 24">
                 <path d="M5 12h14M12 5l7 7-7 7" />
               </svg>
@@ -630,9 +703,9 @@ export default function FaceAnalyzer({ onClose, onRequireAuth }) {
           <div className="fa-foot fa-foot-result">
             <button className="fa-restart" onClick={restart}>
               <svg width="14" height="14" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24"><polyline points="23 4 23 10 17 10" /><path d="M20.49 15a9 9 0 11-2.12-9.36L23 10" /></svg>
-              Qayta skan
+              {tx('btnRestart')}
             </button>
-            <button className="fa-finish" onClick={handleClose}>Tushunarli ✓</button>
+            <button className="fa-finish" onClick={handleClose}>{tx('btnDone')}</button>
           </div>
         )}
       </div>
@@ -641,17 +714,22 @@ export default function FaceAnalyzer({ onClose, onRequireAuth }) {
   )
 }
 
-function Metric({ label, value, color, suffix = '', invert = false }) {
+function Metric({ label, value, color, suffix = '', invert = false, lang = 'uz' }) {
   const status = invert
     ? (value < 30 ? 'good' : value < 60 ? 'mid' : 'high')
     : (value > 70 ? 'good' : value > 40 ? 'mid' : 'low')
+  const txt = {
+    good: { uz: '✓ Yaxshi', ru: '✓ Хорошо', en: '✓ Good' },
+    mid:  { uz: "~ O'rta",  ru: '~ Средне', en: '~ Average' },
+    high: { uz: '! Yuqori', ru: '! Высокое', en: '! High' },
+    low:  { uz: '! Past',   ru: '! Низкое',  en: '! Low' },
+  }
+  const label2 = txt[status][lang] || txt[status].uz
   return (
     <div className="fa-metric">
       <div className="fa-metric-top">
         <span className="fa-metric-label">{label}</span>
-        <span className={`fa-metric-status fa-metric-${status}`}>
-          {status === 'good' ? '✓ Yaxshi' : status === 'mid' ? "~ O'rta" : (invert ? '! Yuqori' : '! Past')}
-        </span>
+        <span className={`fa-metric-status fa-metric-${status}`}>{label2}</span>
       </div>
       <div className="fa-metric-bar">
         <div className="fa-metric-fill" style={{ width: `${value}%`, background: color }} />
