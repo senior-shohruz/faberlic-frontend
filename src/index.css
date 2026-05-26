@@ -6990,15 +6990,18 @@ html, body { overflow-x: hidden; max-width: 100vw; }
    ============================================================ */
 @media (max-width: 768px) {
   .adm-order-cards {
-    gap: 24px;
+    gap: 24px !important;
     padding-top: 14px;
     padding-bottom: 14px;
   }
   .adm-order-card {
-    margin-bottom: 0;
+    margin-bottom: 16px !important;
     box-shadow: 0 4px 16px rgba(0,0,0,0.08);
   }
+  .adm-order-card:last-child { margin-bottom: 0 !important; }
 }
 @media (max-width: 480px) {
-  .adm-order-cards { gap: 22px; padding-top: 12px; padding-bottom: 12px; }
+  .adm-order-cards { gap: 22px !important; padding-top: 12px; padding-bottom: 12px; }
+  .adm-order-card { margin-bottom: 14px !important; }
+  .adm-order-card:last-child { margin-bottom: 0 !important; }
 }
