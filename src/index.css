@@ -7508,3 +7508,4 @@ html, body { overflow-x: hidden; max-width: 100vw; }
 
 /* Hide hero arrows — navigatsiya dots orqali bo'ladi */
 .hs-arr { display: none !important; }
+.hs-num { display: none !important; }
