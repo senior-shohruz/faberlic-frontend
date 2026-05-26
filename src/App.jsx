@@ -14,7 +14,9 @@ import CartSidebar from './components/CartSidebar'
 import SearchModal from './components/SearchModal'
 import SkinQuiz from './components/SkinQuiz'
 import FaceAnalyzer from './components/FaceAnalyzer'
+import AiChat from './components/AiChat'
 import AiFloatButton from './components/AiFloatButton'
+import AiChatButton from './components/AiChatButton'
 import MobileNav from './components/MobileNav'
 import LoadingScreen from './components/LoadingScreen'
 import AdminLayout from './pages/admin/AdminLayout'
@@ -40,6 +42,7 @@ function Shop() {
   const [searchOpen, setSearchOpen] = useState(false)
   const [quizOpen, setQuizOpen] = useState(false)
   const [faceOpen, setFaceOpen] = useState(false)
+  const [chatOpen, setChatOpen] = useState(false)
   const { setOpen: openCart, count } = useCart()
 
   return (
@@ -56,6 +59,7 @@ function Shop() {
       </main>
       <Footer />
       <CartSidebar onRequireAuth={() => setAuthOpen(true)} />
+      <AiChatButton onClick={() => setChatOpen(true)} />
       <AiFloatButton onClick={() => setFaceOpen(true)} />
       <MobileNav
         onOpenSearch={() => setSearchOpen(true)}
@@ -79,6 +83,12 @@ function Shop() {
         <FaceAnalyzer
           onClose={() => setFaceOpen(false)}
           onRequireAuth={() => { setFaceOpen(false); setAuthOpen(true) }}
+        />
+      )}
+      {chatOpen && (
+        <AiChat
+          onClose={() => setChatOpen(false)}
+          onRequireAuth={() => { setChatOpen(false); setAuthOpen(true) }}
         />
       )}
     </>
