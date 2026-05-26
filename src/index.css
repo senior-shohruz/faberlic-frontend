@@ -6630,21 +6630,21 @@ html, body { overflow-x: hidden; max-width: 100vw; }
 
 /* ── Order card mobile fixes ── */
 @media (max-width: 768px) {
-  .adm-order-card { padding: 12px 14px; border-radius: 14px; }
-  .adm-oc-head { margin-bottom: 8px; gap: 8px; flex-wrap: wrap; }
+  .adm-order-card { padding: 11px 12px; border-radius: 12px; }
+  .adm-oc-head { margin-bottom: 8px; gap: 6px; flex-wrap: wrap; }
   .adm-oc-id { gap: 6px; flex-wrap: wrap; }
-  .adm-oc-id .adm-art { font-size: 11px; padding: 3px 8px; }
-  .adm-oc-date { font-size: 10.5px; }
+  .adm-oc-id .adm-art { font-size: 10.5px; padding: 2px 7px; }
+  .adm-oc-date { font-size: 10px; }
   .adm-oc-user { gap: 8px; margin-bottom: 8px; }
   .adm-oc-user .adm-u-avatar.sm { width: 30px; height: 30px; font-size: 12px; flex-shrink: 0; }
   .adm-oc-user .adm-u-name { font-size: 13px; line-height: 1.2; }
   .adm-oc-items { gap: 4px; margin-bottom: 8px; }
-  .adm-oc-item-tag { font-size: 10.5px; padding: 3px 7px; max-width: 130px; }
+  .adm-oc-item-tag { font-size: 10px; padding: 2px 6px; max-width: 110px; }
   .adm-oc-footer {
     padding-top: 8px; gap: 6px;
     flex-wrap: wrap; align-items: stretch;
   }
-  .adm-oc-total { font-size: 14px; flex-shrink: 0; }
+  .adm-oc-total { font-size: 13.5px; flex-shrink: 0; }
   .adm-oc-punkt { font-size: 10.5px; flex: 1 1 100%; order: 3; margin: 0; }
   .adm-oc-actions { flex-shrink: 0; order: 2; }
   .adm-oc-select {
@@ -6838,70 +6838,75 @@ html, body { overflow-x: hidden; max-width: 100vw; }
    Customer name + phone prominent, total in top-right, items below
    ============================================================ */
 .adm-oc-customer {
-  display: flex; align-items: center; gap: 10px;
-  padding: 10px 12px;
+  display: flex; align-items: center; gap: 8px;
+  padding: 8px 10px;
   background: linear-gradient(135deg, #fef3f3, #fff5f5);
   border: 1px solid #fecaca;
-  border-radius: 12px;
-  margin-bottom: 10px;
+  border-radius: 10px;
+  margin-bottom: 8px;
+  min-width: 0;
 }
 .adm-oc-customer .adm-u-avatar.sm {
-  width: 36px; height: 36px; font-size: 14px;
+  width: 32px; height: 32px; font-size: 12px;
   background: linear-gradient(135deg, #e63946, #c1121f);
   color: white; flex-shrink: 0;
   display: flex; align-items: center; justify-content: center;
   border-radius: 50%; font-weight: 700;
 }
-.adm-oc-cust-info { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 3px; }
+.adm-oc-cust-info { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 2px; }
 .adm-oc-cust-name {
-  font-size: 14px; font-weight: 700; color: #0f172a;
+  font-size: 12.5px; font-weight: 700; color: #0f172a;
   white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+  line-height: 1.2;
 }
 .adm-oc-cust-phone {
-  display: inline-flex; align-items: center; gap: 4px;
-  font-size: 12px; font-weight: 600;
+  display: inline-flex; align-items: center; gap: 3px;
+  font-size: 10.5px; font-weight: 600;
   color: #1d4ed8; text-decoration: none;
   background: white;
-  padding: 3px 8px; border-radius: 100px;
+  padding: 2px 7px; border-radius: 100px;
   border: 1px solid #bfdbfe;
   align-self: flex-start;
-  white-space: nowrap;
+  white-space: nowrap; max-width: 100%;
+  overflow: hidden; text-overflow: ellipsis;
   transition: background 0.18s, color 0.18s;
 }
 .adm-oc-cust-phone:hover { background: #dbeafe; color: #1e3a8a; }
-.adm-oc-cust-phone svg { flex-shrink: 0; }
+.adm-oc-cust-phone svg { flex-shrink: 0; width: 9px; height: 9px; }
 .adm-oc-total-top {
-  font-size: 14px; font-weight: 800; color: #e63946;
+  font-size: 12.5px; font-weight: 800; color: #e63946;
   white-space: nowrap; flex-shrink: 0;
   text-align: right; line-height: 1.15;
+  display: flex; flex-direction: column; align-items: flex-end; gap: 1px;
 }
-.adm-oc-total-top small { font-size: 9px; font-weight: 600; opacity: 0.7; }
+.adm-oc-total-top small { font-size: 8.5px; font-weight: 600; opacity: 0.7; }
 
 .adm-oc-punkt-row {
-  font-size: 12px; color: #475569;
+  font-size: 10.5px; color: #475569;
   background: #f0fdf4;
   border: 1px solid #bbf7d0;
-  border-radius: 10px;
-  padding: 7px 10px;
-  margin-bottom: 10px;
+  border-radius: 8px;
+  padding: 5px 8px;
+  margin-bottom: 8px;
   white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
 }
 
 .adm-order-card .adm-oc-footer {
   border-top: 1px solid #f1f5f9;
-  padding-top: 10px;
-  margin-top: 4px;
+  padding-top: 8px;
+  margin-top: 2px;
   justify-content: flex-end;
-  gap: 8px;
+  gap: 6px;
 }
-.adm-order-card .adm-oc-footer .adm-oc-actions { width: 100%; justify-content: space-between; }
+.adm-order-card .adm-oc-footer .adm-oc-actions { width: 100%; justify-content: space-between; gap: 6px; }
 .adm-order-card .adm-oc-footer .adm-oc-select {
   flex: 1; max-width: none !important;
-  height: 32px !important;
-  font-size: 11.5px !important;
+  height: 30px !important;
+  font-size: 11px !important;
   font-weight: 600;
-  padding: 4px 24px 4px 10px !important;
+  padding: 3px 22px 3px 9px !important;
 }
+.adm-order-card .adm-oc-footer .adm-btn-icon { width: 30px; height: 30px; flex-shrink: 0; }
 
 /* Dark mode */
 [data-theme="dark"] .adm-oc-customer {
@@ -6923,7 +6928,51 @@ html, body { overflow-x: hidden; max-width: 100vw; }
 [data-theme="dark"] .adm-order-card .adm-oc-footer { border-top-color: rgba(255,255,255,0.06); }
 
 @media (max-width: 380px) {
-  .adm-oc-cust-name { font-size: 13px; }
-  .adm-oc-total-top { font-size: 12.5px; }
-  .adm-oc-cust-phone { font-size: 11px; padding: 2px 7px; }
+  .adm-order-card { padding: 10px 11px !important; }
+  .adm-oc-customer { padding: 7px 9px; gap: 7px; }
+  .adm-oc-customer .adm-u-avatar.sm { width: 28px; height: 28px; font-size: 11px; }
+  .adm-oc-cust-name { font-size: 12px; }
+  .adm-oc-total-top { font-size: 11.5px; }
+  .adm-oc-cust-phone { font-size: 10px; padding: 2px 6px; }
+  .adm-oc-item-tag { max-width: 95px; font-size: 9.5px; padding: 2px 6px; }
+  .adm-oc-punkt-row { font-size: 10px; padding: 4px 7px; }
+  .adm-oc-footer .adm-oc-select { font-size: 10.5px !important; height: 28px !important; }
+}
+
+
+/* ============================================================
+   ADMIN — GLOBAL OVERFLOW PROTECTION (mobile)
+   Hech qaysi karta ekrandan tashqariga chiqmasin
+   ============================================================ */
+@media (max-width: 768px) {
+  html, body { overflow-x: hidden; }
+  .adm { overflow-x: hidden; max-width: 100vw; }
+  .adm-content { overflow-x: hidden; max-width: 100vw; box-sizing: border-box; }
+  .adm-page, .adm-card, .adm-order-cards, .adm-user-cards, .adm-prod-cards {
+    max-width: 100%;
+    overflow-x: hidden;
+  }
+  .adm-order-card, .adm-user-card, .adm-prod-card {
+    max-width: 100%;
+    box-sizing: border-box;
+    overflow: hidden;
+  }
+  .adm-order-card *, .adm-user-card *, .adm-prod-card * {
+    min-width: 0;
+    max-width: 100%;
+  }
+}
+
+/* ============================================================
+   ADMIN — Filter tabs scroll without page horizontal scroll
+   ============================================================ */
+@media (max-width: 768px) {
+  .adm-filter-btns {
+    margin-left: -12px; margin-right: -12px;
+    padding-left: 12px; padding-right: 12px;
+    overflow-x: auto;
+    flex-wrap: nowrap;
+    scrollbar-width: none;
+  }
+  .adm-filter-btns::-webkit-scrollbar { display: none; }
 }
