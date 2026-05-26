@@ -6,6 +6,7 @@ import { useTheme } from '../context/ThemeContext'
 import { useLang } from '../context/LanguageContext'
 import LanguageSwitcher from './LanguageSwitcher'
 import MyOrders from './MyOrders'
+import BrandLogo from './BrandLogo'
 
 export default function Header({ onOpenAuth, onOpenCart, onOpenSearch }) {
   const [menuOpen, setMenuOpen] = useState(false)
@@ -42,7 +43,7 @@ export default function Header({ onOpenAuth, onOpenCart, onOpenSearch }) {
     <div className={`header-wrap ${scrolled ? 'scrolled' : ''}`}>
       <header className="header">
         <a href="/" className="logo">
-          <span className="logo-icon">PS</span>
+          <BrandLogo size={40} />
           <span className="logo-text">Premium Store</span>
         </a>
 

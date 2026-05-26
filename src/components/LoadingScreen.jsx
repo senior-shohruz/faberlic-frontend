@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react'
+import BrandLogo from './BrandLogo'
 
 export default function LoadingScreen() {
   const [progress, setProgress] = useState(0)
@@ -24,7 +25,7 @@ export default function LoadingScreen() {
     <div className={`ls-overlay ${progress === 100 ? 'ls-fade' : ''}`}>
       <div className="ls-content">
         <div className="ls-logo">
-          <div className="ls-logo-icon">PS</div>
+          <BrandLogo size={56} />
           <div className="ls-logo-words">
             <span className="ls-logo-name">Premium Store</span>
           </div>

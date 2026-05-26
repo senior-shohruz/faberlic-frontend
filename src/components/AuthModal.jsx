@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import { useAuth } from '../context/AuthContext'
 import { useLang } from '../context/LanguageContext'
+import BrandLogo from './BrandLogo'
 
 export default function AuthModal({ onClose }) {
   const [tab, setTab] = useState('login')
@@ -36,7 +37,7 @@ export default function AuthModal({ onClose }) {
         </button>
 
         <div className="auth-brand">
-          <span className="logo-icon" style={{ width: 38, height: 38, fontSize: 14 }}>PS</span>
+          <BrandLogo size={42} />
           <span className="auth-brand-name">Premium Store</span>
         </div>
 

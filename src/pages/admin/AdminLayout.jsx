@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import { NavLink, Outlet, useNavigate } from 'react-router-dom'
 import { useAuth } from '../../context/AuthContext'
+import BrandLogo from '../../components/BrandLogo'
 
 const navItems = [
   { to: '/admin', label: 'Dashboard', icon: <GridIcon />, end: true },
@@ -36,7 +37,7 @@ export default function AdminLayout() {
           </svg>
         </button>
         <div className="adm-topbar-brand">
-          <span className="adm-topbar-logo">PS</span>
+          <BrandLogo size={32} />
           <span className="adm-topbar-name">Premium Store <span>Admin</span></span>
         </div>
         <div className="adm-topbar-avatar" onClick={handleLogout} title="Chiqish">
@@ -53,7 +54,7 @@ export default function AdminLayout() {
       <aside className={`adm-sidebar${sidebarOpen ? ' adm-sidebar-open' : ''}`}>
         <div className="adm-sidebar-head">
           <div className="adm-logo">
-            <span className="logo-icon" style={{ width: 38, height: 38, fontSize: 13 }}>PS</span>
+            <BrandLogo size={40} />
             <div>
               <div className="adm-logo-text">Premium Store</div>
               <div className="adm-logo-sub">Admin Panel</div>
