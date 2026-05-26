@@ -46,9 +46,8 @@ export default function Footer() {
       <div className="footer-inner">
         <div className="footer-brand">
           <a href="#" className="logo footer-logo">
-            <span className="logo-icon">P</span>
-            <span className="logo-text">remium Store</span>
-            <span className="logo-dot">.</span>
+            <span className="logo-icon">PS</span>
+            <span className="logo-text">Premium Store</span>
           </a>
           <p className="footer-brand-desc">{t('footer.brandDesc')}</p>
           <div className="footer-socials">

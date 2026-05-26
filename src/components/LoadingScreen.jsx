@@ -24,10 +24,9 @@ export default function LoadingScreen() {
     <div className={`ls-overlay ${progress === 100 ? 'ls-fade' : ''}`}>
       <div className="ls-content">
         <div className="ls-logo">
-          <div className="ls-logo-icon">P</div>
+          <div className="ls-logo-icon">PS</div>
           <div className="ls-logo-words">
-            <span className="ls-logo-name">remium Store</span>
-            <span className="ls-logo-dot">.</span>
+            <span className="ls-logo-name">Premium Store</span>
           </div>
         </div>
         <div className="ls-rings">

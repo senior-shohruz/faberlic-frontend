@@ -36,8 +36,8 @@ export default function AuthModal({ onClose }) {
         </button>
 
         <div className="auth-brand">
-          <span className="logo-icon" style={{ width: 36, height: 36, fontSize: 18 }}>P</span>
-          <span className="auth-brand-name">remium Store<span className="logo-dot">.</span></span>
+          <span className="logo-icon" style={{ width: 38, height: 38, fontSize: 14 }}>PS</span>
+          <span className="auth-brand-name">Premium Store</span>
         </div>
 
         <h2 className="auth-heading">

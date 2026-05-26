@@ -42,9 +42,8 @@ export default function Header({ onOpenAuth, onOpenCart, onOpenSearch }) {
     <div className={`header-wrap ${scrolled ? 'scrolled' : ''}`}>
       <header className="header">
         <a href="/" className="logo">
-          <span className="logo-icon">P</span>
-          <span className="logo-text">remium Store</span>
-          <span className="logo-dot">.</span>
+          <span className="logo-icon">PS</span>
+          <span className="logo-text">Premium Store</span>
         </a>
 
         <nav className={`nav ${menuOpen ? 'open' : ''}`}>
