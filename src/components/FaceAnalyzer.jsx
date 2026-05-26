@@ -7,11 +7,16 @@ import { useLang } from '../context/LanguageContext'
 
 const API = import.meta.env.VITE_API_URL || 'http://localhost:5000/api'
 
-/* ────────────────────────────────────────────────
-   Heuristic face / skin analysis (client-side only)
-   No image is uploaded anywhere.
-   ──────────────────────────────────────────────── */
-function analyzeImage(imageData) {
+/* ════════════════════════════════════════════════════════════════
+   AI FACE ANALYZER — Premium webcam-based skin analysis
+   - Multi-frame averaging for accuracy
+   - Better skin detection (YCbCr range)
+   - Detailed metrics: hydration, oil, redness, brightness, texture
+   - Personalized cream recommendations
+   - Privacy-first: no upload, all in-browser
+   ════════════════════════════════════════════════════════════════ */
+
+function analyzeFrame(imageData) {
   const { data, width, height } = imageData
   const cx = width / 2
   const cy = height / 2
@@ -22,9 +27,12 @@ function analyzeImage(imageData) {
   let chinB = 0, chinN = 0
   let totalR = 0, totalG = 0, totalB = 0, totalN = 0
   let varianceSum = 0
+  let brightSum = 0
 
-  for (let y = 0; y < height; y += 3) {
-    for (let x = 0; x < width; x += 3) {
+  const step = Math.max(2, Math.round(width / 200)) // adaptive sampling
+
+  for (let y = 0; y < height; y += step) {
+    for (let x = 0; x < width; x += step) {
       const dx = x - cx, dy = y - cy
       const dist = Math.sqrt(dx * dx + dy * dy)
       if (dist > radius) continue
@@ -32,80 +40,98 @@ function analyzeImage(imageData) {
       const idx = (y * width + x) * 4
       const r = data[idx], g = data[idx + 1], b = data[idx + 2]
 
-      // Basic skin colour filter
-      if (r < 50 || g < 25 || b < 15) continue
-      if (r <= g || r <= b) continue
-      if (Math.abs(r - g) > 80) continue
+      // Improved skin detection — YCbCr based
+      // Convert to YCbCr to reliably filter skin pixels
+      const yLum = 0.299 * r + 0.587 * g + 0.114 * b
+      const cb = -0.169 * r - 0.331 * g + 0.5 * b + 128
+      const cr = 0.5 * r - 0.419 * g - 0.081 * b + 128
+
+      const isSkin =
+        yLum > 60 &&
+        cb >= 77 && cb <= 127 &&
+        cr >= 133 && cr <= 173 &&
+        r > 50 && g > 30 && b > 15 &&
+        Math.abs(r - g) > 8 &&
+        r > b
+
+      if (!isSkin) continue
 
       const brightness = (r + g + b) / 3
       totalN++
       totalR += r; totalG += g; totalB += b
+      brightSum += brightness
 
-      // T-zone (forehead): upper third
-      if (dy < -radius * 0.3) {
-        foreheadB += brightness
-        foreheadN++
-      }
-      // Cheeks: middle band, away from centre
-      else if (Math.abs(dy) <= radius * 0.3 && Math.abs(dx) > radius * 0.3) {
-        cheekB += brightness
-        cheekN++
-      }
-      // Chin: lower third
-      else if (dy > radius * 0.3) {
-        chinB += brightness
-        chinN++
-      }
+      if (dy < -radius * 0.3) { foreheadB += brightness; foreheadN++ }
+      else if (Math.abs(dy) <= radius * 0.3 && Math.abs(dx) > radius * 0.3) { cheekB += brightness; cheekN++ }
+      else if (dy > radius * 0.3) { chinB += brightness; chinN++ }
 
       varianceSum += brightness * brightness
     }
   }
 
-  if (totalN < 80) {
-    return { ok: false, error: 'noface' }
-  }
+  if (totalN < 80) return null
 
   const avgR = totalR / totalN
   const avgG = totalG / totalN
   const avgB = totalB / totalN
-  const avg = (avgR + avgG + avgB) / 3
-  const variance = Math.sqrt(varianceSum / totalN - avg * avg)
+  const avg = brightSum / totalN
+  const variance = Math.sqrt(Math.max(0, varianceSum / totalN - avg * avg))
 
   const fAvg = foreheadN > 0 ? foreheadB / foreheadN : avg
   const cAvg = cheekN > 0 ? cheekB / cheekN : avg
   const chAvg = chinN > 0 ? chinB / chinN : avg
 
-  // T-zone "shine" = forehead brighter than cheeks
-  const tZoneShine = fAvg - cAvg
-  // Redness ratio
-  const redness = avgR / Math.max(avgG, 1)
-  // Tone
-  let tone = 'medium'
-  if (avg > 175) tone = 'light'
-  else if (avg < 125) tone = 'dark'
+  return {
+    sampleSize: totalN,
+    avgR, avgG, avgB, avg, variance,
+    foreheadAvg: fAvg, cheekAvg: cAvg, chinAvg: chAvg,
+  }
+}
 
-  // Skin type
+function combineFrames(frames) {
+  const valid = frames.filter(f => f && f.sampleSize > 80)
+  if (valid.length === 0) return null
+
+  const avg = (key) => valid.reduce((s, f) => s + f[key], 0) / valid.length
+
+  const stats = {
+    avgR: avg('avgR'),
+    avgG: avg('avgG'),
+    avgB: avg('avgB'),
+    avg: avg('avg'),
+    variance: avg('variance'),
+    foreheadAvg: avg('foreheadAvg'),
+    cheekAvg: avg('cheekAvg'),
+    chinAvg: avg('chinAvg'),
+    sampleSize: valid.reduce((s, f) => s + f.sampleSize, 0) / valid.length,
+  }
+
+  // Derived metrics
+  const tZoneShine = stats.foreheadAvg - stats.cheekAvg
+  const redness = stats.avgR / Math.max(stats.avgG, 1)
+
   let skinType = 'normal'
   if (tZoneShine > 14) skinType = 'oily'
   else if (tZoneShine > 6) skinType = 'combo'
-  else if (avg < 130 && variance < 28) skinType = 'dry'
+  else if (stats.avg < 130 && stats.variance < 28) skinType = 'dry'
 
-  // Concerns (max 3)
   const concerns = []
   if (tZoneShine > 8) concerns.push('oily')
-  if (redness > 1.18 || variance > 38) concerns.push('redness')
-  if (avg < 130 || (skinType === 'dry')) concerns.push('moisture')
-  if (variance > 40) concerns.push('spots')
+  if (redness > 1.18 || stats.variance > 38) concerns.push('redness')
+  if (stats.avg < 130 || skinType === 'dry') concerns.push('moisture')
+  if (stats.variance > 40) concerns.push('spots')
   if (concerns.length === 0) concerns.push('balanced')
 
-  // Hydration score (0-100): higher = better
-  const hydration = Math.max(20, Math.min(99, Math.round(50 + (avg - 130) * 0.6 - tZoneShine * 1.2)))
-  // Oiliness 0-100
+  const hydration = Math.max(20, Math.min(99, Math.round(50 + (stats.avg - 130) * 0.6 - tZoneShine * 1.2)))
   const oilLevel = Math.max(5, Math.min(99, Math.round(40 + tZoneShine * 2.4)))
-  // Redness 0-100
-  const rednessLevel = Math.max(5, Math.min(99, Math.round((redness - 1.0) * 220 + variance * 0.6)))
-  // Confidence based on sample size
-  const confidence = Math.min(98, 72 + Math.floor(totalN / 90))
+  const rednessLevel = Math.max(5, Math.min(99, Math.round((redness - 1.0) * 220 + stats.variance * 0.6)))
+
+  // Confidence based on number of frames + sample density
+  const confidence = Math.min(98, 70 + Math.floor(stats.sampleSize / 100) + valid.length * 2)
+
+  let tone = 'medium'
+  if (stats.avg > 175) tone = 'light'
+  else if (stats.avg < 125) tone = 'dark'
 
   return {
     ok: true,
@@ -119,35 +145,32 @@ function analyzeImage(imageData) {
   }
 }
 
-/* ────────────────────────────────────────────────
-   Match products to analysis (re-uses backend /api/products)
-   ──────────────────────────────────────────────── */
+/* ─── Product matching ─── */
 function scoreProduct(p, analysis) {
   let score = 0
   const name = (p.name || '').toLowerCase()
   const cat = (p.category || '').toLowerCase()
 
-  if (analysis.skinType === 'oily' && (cat === 'gigiena' || name.includes('toza') || name.includes('mat'))) score += 4
+  // Skin type matching
+  if (analysis.skinType === 'oily' && (cat.includes('gigiena') || name.includes('toza') || name.includes('mat'))) score += 4
   if (analysis.skinType === 'dry' && (name.includes('namlov') || name.includes('krem') || name.includes('serum'))) score += 5
-  if (analysis.skinType === 'combo' && cat === 'kosmetika') score += 2
+  if (analysis.skinType === 'combo' && cat.includes('kosmetika')) score += 2
   if (analysis.skinType === 'normal') score += 1
 
+  // Concerns
   if (analysis.concerns.includes('moisture') && (name.includes('namlov') || name.includes('krem') || name.includes('serum') || name.includes('losy'))) score += 4
   if (analysis.concerns.includes('redness') && (name.includes('toza') || name.includes('soft') || name.includes('lab'))) score += 3
-  if (analysis.concerns.includes('oily') && (cat === 'gigiena' || name.includes('toza'))) score += 3
+  if (analysis.concerns.includes('oily') && (cat.includes('gigiena') || name.includes('toza'))) score += 3
   if (analysis.concerns.includes('spots') && (name.includes('oqart') || name.includes("dog'") || name.includes('vitamin'))) score += 4
 
-  if (cat === 'kosmetika') score += 0.5
+  if (cat.includes('kosmetika')) score += 0.5
   if ((p.discount || 0) >= 40) score += 0.8
+  if ((p.stock || 0) > 0) score += 0.3
 
   return score
 }
 
-/* ────────────────────────────────────────────────
-   The component
-   ──────────────────────────────────────────────── */
-const STAGES = ['intro', 'scanning', 'analyzing', 'result']
-
+/* ─── Component ─── */
 export default function FaceAnalyzer({ onClose, onRequireAuth }) {
   const [stage, setStage] = useState('intro')
   const [error, setError] = useState('')
@@ -157,9 +180,8 @@ export default function FaceAnalyzer({ onClose, onRequireAuth }) {
   const videoRef = useRef(null)
   const canvasRef = useRef(null)
   const streamRef = useRef(null)
-  const captureTimerRef = useRef(null)
-  const progressTimerRef = useRef(null)
-  const analyzeTimerRef = useRef(null)
+  const timersRef = useRef({})
+  const framesRef = useRef([])
 
   const { addItem } = useCart()
   const { user } = useAuth()
@@ -172,7 +194,7 @@ export default function FaceAnalyzer({ onClose, onRequireAuth }) {
     return () => { document.body.style.overflow = '' }
   }, [])
 
-  /* esc to close */
+  /* esc close */
   useEffect(() => {
     const onKey = e => { if (e.key === 'Escape') handleClose() }
     document.addEventListener('keydown', onKey)
@@ -180,135 +202,184 @@ export default function FaceAnalyzer({ onClose, onRequireAuth }) {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
-  /* fetch products once */
+  /* fetch products */
   useEffect(() => {
-    fetch(`${API}/products`).then(r => r.json()).then(data => {
-      setProducts(Array.isArray(data) ? data : (data?.data || []))
-    }).catch(() => setProducts([]))
+    let alive = true
+    fetch(`${API}/products`)
+      .then(r => r.ok ? r.json() : [])
+      .then(data => {
+        if (!alive) return
+        setProducts(Array.isArray(data) ? data : (data?.data || []))
+      })
+      .catch(() => {})
+    return () => { alive = false }
   }, [])
 
-  const stopCamera = useCallback(() => {
+  const stopAll = useCallback(() => {
     if (streamRef.current) {
-      streamRef.current.getTracks().forEach(t => t.stop())
+      try { streamRef.current.getTracks().forEach(tr => tr.stop()) } catch {}
       streamRef.current = null
     }
-    if (videoRef.current) videoRef.current.srcObject = null
-    if (captureTimerRef.current) clearTimeout(captureTimerRef.current)
-    if (progressTimerRef.current) clearInterval(progressTimerRef.current)
-    if (analyzeTimerRef.current) clearTimeout(analyzeTimerRef.current)
+    if (videoRef.current) {
+      try { videoRef.current.srcObject = null } catch {}
+    }
+    Object.values(timersRef.current).forEach(t => {
+      try { clearTimeout(t); clearInterval(t) } catch {}
+    })
+    timersRef.current = {}
+    framesRef.current = []
   }, [])
 
   const handleClose = useCallback(() => {
-    stopCamera()
+    stopAll()
     onClose?.()
-  }, [stopCamera, onClose])
+  }, [stopAll, onClose])
+
+  /* cleanup on unmount */
+  useEffect(() => () => stopAll(), [stopAll])
+
+  const captureSingleFrame = useCallback(() => {
+    const video = videoRef.current
+    const canvas = canvasRef.current
+    if (!video || !canvas || !video.videoWidth) return null
+
+    canvas.width = video.videoWidth
+    canvas.height = video.videoHeight
+    const ctx = canvas.getContext('2d', { willReadFrequently: true })
+    if (!ctx) return null
+
+    ctx.save()
+    ctx.translate(canvas.width, 0)
+    ctx.scale(-1, 1)
+    ctx.drawImage(video, 0, 0, canvas.width, canvas.height)
+    ctx.restore()
+
+    try {
+      const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height)
+      return analyzeFrame(imageData)
+    } catch (err) {
+      console.warn('frame capture error', err)
+      return null
+    }
+  }, [])
 
   const startScan = async () => {
     setError('')
 
     // Browser support check
     if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
-      // HTTPS check
-      if (window.location.protocol !== 'https:' && window.location.hostname !== 'localhost') {
-        setError('insecure')
-      } else {
-        setError('unavailable')
-      }
+      const isSecure = window.isSecureContext || window.location.hostname === 'localhost'
+      setError(isSecure ? 'unavailable' : 'insecure')
       return
     }
 
+    let stream
     try {
-      const stream = await navigator.mediaDevices.getUserMedia({
-        video: { facingMode: 'user', width: { ideal: 640 }, height: { ideal: 480 } },
+      stream = await navigator.mediaDevices.getUserMedia({
+        video: {
+          facingMode: 'user',
+          width: { ideal: 640, min: 320 },
+          height: { ideal: 480, min: 240 },
+        },
         audio: false,
       })
-      streamRef.current = stream
-      // Switch stage first so that <video> element exists in DOM
-      setStage('scanning')
-      setProgress(0)
-
-      // Wait next tick for DOM render then attach stream
-      setTimeout(async () => {
-        if (videoRef.current) {
-          videoRef.current.srcObject = stream
-          try {
-            await videoRef.current.play()
-          } catch (playErr) {
-            console.warn('play error', playErr)
-          }
-        }
-      }, 50)
-
-      // animate progress
-      progressTimerRef.current = setInterval(() => {
-        setProgress(p => {
-          if (p >= 100) return 100
-          return p + (Math.random() * 6 + 2)
-        })
-      }, 120)
-      // capture frame after ~3.5s
-      captureTimerRef.current = setTimeout(() => {
-        captureAndAnalyze()
-      }, 3500)
     } catch (e) {
-      console.warn('camera error', e)
-      if (e.name === 'NotAllowedError' || e.name === 'PermissionDeniedError') {
-        setError('denied')
-      } else if (e.name === 'NotFoundError' || e.name === 'DevicesNotFoundError') {
-        setError('unavailable')
-      } else {
-        setError('unavailable')
-      }
+      console.warn('camera error:', e)
+      const name = (e?.name || '').toLowerCase()
+      if (name.includes('notallowed') || name.includes('permission')) setError('denied')
+      else if (name.includes('notfound') || name.includes('devicesnotfound')) setError('unavailable')
+      else if (name.includes('overconstrained')) setError('unavailable')
+      else if (name.includes('notreadable') || name.includes('trackstart')) setError('busy')
+      else setError('unavailable')
+      return
     }
-  }
 
-  const captureAndAnalyze = () => {
-    clearInterval(progressTimerRef.current)
-    setProgress(100)
-    const video = videoRef.current
-    const canvas = canvasRef.current
-    if (!video || !canvas) return
+    streamRef.current = stream
+    framesRef.current = []
+    setProgress(0)
+    setStage('scanning')
 
-    canvas.width = video.videoWidth || 640
-    canvas.height = video.videoHeight || 480
-    const ctx = canvas.getContext('2d')
-    // Mirror so analysis matches what user sees
-    ctx.save()
-    ctx.translate(canvas.width, 0)
-    ctx.scale(-1, 1)
-    ctx.drawImage(video, 0, 0, canvas.width, canvas.height)
-    ctx.restore()
-    const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height)
-
-    setStage('analyzing')
-
-    analyzeTimerRef.current = setTimeout(() => {
-      const result = analyzeImage(imageData)
-      stopCamera()
-      if (!result.ok) {
-        setError('noface')
-        setStage('intro')
-        return
+    // attach stream after stage transition
+    setTimeout(async () => {
+      const v = videoRef.current
+      if (!v || !streamRef.current) return
+      v.srcObject = streamRef.current
+      v.muted = true
+      v.playsInline = true
+      try {
+        await v.play()
+      } catch (playErr) {
+        console.warn('autoplay blocked:', playErr)
+        // try once more on user interaction (already gave permission)
+        try { await v.play() } catch {}
       }
-      setAnalysis(result)
-      setStage('result')
-    }, 1600)
+    }, 80)
+
+    // progress animation
+    timersRef.current.progress = setInterval(() => {
+      setProgress(p => {
+        if (p >= 100) return 100
+        return Math.min(100, p + (Math.random() * 4 + 2.5))
+      })
+    }, 130)
+
+    // start capturing frames after a moment (let camera warm up)
+    timersRef.current.firstFrame = setTimeout(() => {
+      timersRef.current.frames = setInterval(() => {
+        const f = captureSingleFrame()
+        if (f) framesRef.current.push(f)
+      }, 350)
+    }, 800)
+
+    // finish after 4s
+    timersRef.current.finish = setTimeout(() => {
+      clearInterval(timersRef.current.frames)
+      clearInterval(timersRef.current.progress)
+      setProgress(100)
+
+      // capture a few final frames to ensure data
+      for (let i = 0; i < 2; i++) {
+        const f = captureSingleFrame()
+        if (f) framesRef.current.push(f)
+      }
+
+      setStage('analyzing')
+
+      timersRef.current.analyze = setTimeout(() => {
+        const result = combineFrames(framesRef.current)
+        // stop camera once we have data
+        if (streamRef.current) {
+          try { streamRef.current.getTracks().forEach(tr => tr.stop()) } catch {}
+          streamRef.current = null
+        }
+        if (videoRef.current) {
+          try { videoRef.current.srcObject = null } catch {}
+        }
+        if (!result) {
+          setError('noface')
+          setStage('intro')
+          return
+        }
+        setAnalysis(result)
+        setStage('result')
+      }, 1700)
+    }, 4000)
   }
 
   const handleAdd = (p) => {
     if (!user) { onRequireAuth?.(); handleClose(); return }
     addItem(p)
-    addToast(`${p.emoji || '🛍️'} ${t('products.addedToCart') || "Savatga qo'shildi"}`, 'success')
+    addToast(`${p.emoji || '🛍️'} Savatga qo'shildi`, 'success')
   }
 
   const restart = () => {
+    stopAll()
     setAnalysis(null)
     setError('')
     setProgress(0)
     setStage('intro')
   }
 
-  /* recommendations */
   const recommendations = analysis
     ? products
         .map(p => ({ ...p, _score: scoreProduct(p, analysis) }))
@@ -329,7 +400,10 @@ export default function FaceAnalyzer({ onClose, onRequireAuth }) {
               AI BEAUTY SCAN
             </span>
             <h2 className="fa-head-title">
-              {stage === 'result' ? "Sizning teri tahlilingiz" : "AI Yuz tahlili"}
+              {stage === 'result' ? 'Sizning teri tahlilingiz' :
+               stage === 'scanning' ? 'Skanerlash' :
+               stage === 'analyzing' ? 'Tahlil qilinmoqda' :
+               'AI Yuz tahlili'}
             </h2>
           </div>
           <button className="fa-close" onClick={handleClose} aria-label="Yopish">
@@ -339,7 +413,6 @@ export default function FaceAnalyzer({ onClose, onRequireAuth }) {
           </button>
         </div>
 
-        {/* Body */}
         <div className="fa-body">
 
           {/* INTRO */}
@@ -363,28 +436,37 @@ export default function FaceAnalyzer({ onClose, onRequireAuth }) {
 
               <h3 className="fa-intro-title">Yuzingizni 5 soniyada tahlil qilamiz</h3>
               <p className="fa-intro-sub">
-                Kamerangiz orqali teri turini aniqlaymiz va sizga eng mos kremlarni tavsiya qilamiz.
+                Kameradan foydalanib, terining holatini aniqlaymiz va sizga eng mos kremlarni tavsiya qilamiz.
               </p>
 
               <ul className="fa-features">
                 <li><span className="fa-feature-ico">🔒</span> Maxfiy — rasm hech qayoqqa yuborilmaydi</li>
-                <li><span className="fa-feature-ico">⚡</span> 5 soniyada natija</li>
+                <li><span className="fa-feature-ico">⚡</span> 5 soniyada to'liq natija</li>
                 <li><span className="fa-feature-ico">🎯</span> Shaxsiy mahsulot tavsiyalari</li>
               </ul>
 
               {error === 'denied' && (
                 <div className="fa-error">
-                  <span>⚠️</span> Kamera ruxsati berilmadi. Brauzer sozlamalaridan kameraga ruxsat bering va qayta urining.
+                  <span>⚠️</span>
+                  <div>
+                    <strong>Kamera ruxsati berilmadi.</strong><br />
+                    Brauzer manzil paneli yoniga bosing → Kamera → Allow / Ruxsat bering, va qayta urinib ko'ring.
+                  </div>
                 </div>
               )}
               {error === 'unavailable' && (
                 <div className="fa-error">
-                  <span>⚠️</span> Kamera topilmadi. Iltimos, qurilmangizda kamera mavjudligini tekshiring.
+                  <span>⚠️</span> Kamera topilmadi. Iltimos, qurilmangizda kamera mavjudligini va ishlayotganini tekshiring.
+                </div>
+              )}
+              {error === 'busy' && (
+                <div className="fa-error">
+                  <span>⚠️</span> Kamera boshqa ilova tomonidan ishlatilmoqda. Telegram, Zoom kabi ilovalarni yoping va qayta urining.
                 </div>
               )}
               {error === 'noface' && (
                 <div className="fa-error">
-                  <span>⚠️</span> Yuz aniqlanmadi. Yorug' joyda yuzingizni doiraga to'g'ridan-to'g'ri qarating va qayta urining.
+                  <span>⚠️</span> Yuz aniqlanmadi. Yorug' joyda yuzingizni doiraga to'g'rilang va qayta urinib ko'ring.
                 </div>
               )}
               {error === 'insecure' && (
@@ -394,7 +476,7 @@ export default function FaceAnalyzer({ onClose, onRequireAuth }) {
               )}
 
               <p className="fa-disclaimer">
-                Tavsiyalar ma'lumot uchun, dermatolog ko'rigi o'rnini bosmaydi.
+                Tavsiyalar maslahat sifatida xizmat qiladi va dermatolog ko'rigi o'rnini bosmaydi.
               </p>
             </div>
           )}
@@ -403,7 +485,7 @@ export default function FaceAnalyzer({ onClose, onRequireAuth }) {
           {stage === 'scanning' && (
             <div className="fa-scan">
               <div className="fa-cam-wrap">
-                <video ref={videoRef} className="fa-video" playsInline muted />
+                <video ref={videoRef} className="fa-video" playsInline muted autoPlay />
                 <div className="fa-cam-overlay">
                   <div className="fa-face-frame">
                     <div className="fa-face-corner fa-fc-tl" />
@@ -411,14 +493,13 @@ export default function FaceAnalyzer({ onClose, onRequireAuth }) {
                     <div className="fa-face-corner fa-fc-bl" />
                     <div className="fa-face-corner fa-fc-br" />
                     <div className="fa-scanline" />
-                    <div className="fa-grid" />
                   </div>
                 </div>
                 <div className="fa-cam-hint">Yuzingizni doiraga to'g'rilang</div>
               </div>
               <div className="fa-progress-wrap">
                 <div className="fa-progress-info">
-                  <span className="fa-progress-label">Skaner ishlamoqda…</span>
+                  <span className="fa-progress-label">Skaner ishlamoqda</span>
                   <span className="fa-progress-pct">{Math.min(100, Math.round(progress))}%</span>
                 </div>
                 <div className="fa-progress-track">
@@ -447,7 +528,7 @@ export default function FaceAnalyzer({ onClose, onRequireAuth }) {
                 <span className="fa-think-step active">Yuz aniqlash</span>
                 <span className="fa-think-step active">Teri rangi</span>
                 <span className="fa-think-step active">T-zona tahlili</span>
-                <span className="fa-think-step">Mos kremlar</span>
+                <span className="fa-think-step active">Mos kremlar</span>
               </div>
               <canvas ref={canvasRef} style={{ display: 'none' }} />
             </div>
@@ -471,7 +552,7 @@ export default function FaceAnalyzer({ onClose, onRequireAuth }) {
                      analysis.skinType === 'combo' ? 'Kombinatsiya' : 'Normal teri'}
                   </h3>
                   <p className="fa-result-conf">
-                    Aniqlik darajasi: <strong>{analysis.confidence}%</strong>
+                    Aniqlik: <strong>{analysis.confidence}%</strong>
                   </p>
                 </div>
               </div>
@@ -533,7 +614,7 @@ export default function FaceAnalyzer({ onClose, onRequireAuth }) {
 
         </div>
 
-        {/* Sticky footer with action — always visible */}
+        {/* Sticky footer */}
         {stage === 'intro' && (
           <div className="fa-foot">
             <button className="fa-cta" onClick={startScan}>
@@ -561,8 +642,6 @@ export default function FaceAnalyzer({ onClose, onRequireAuth }) {
 }
 
 function Metric({ label, value, color, suffix = '', invert = false }) {
-  // Display logic: hydration "more is better", oilLevel/redness "less is better"
-  const displayValue = value
   const status = invert
     ? (value < 30 ? 'good' : value < 60 ? 'mid' : 'high')
     : (value > 70 ? 'good' : value > 40 ? 'mid' : 'low')
@@ -571,13 +650,13 @@ function Metric({ label, value, color, suffix = '', invert = false }) {
       <div className="fa-metric-top">
         <span className="fa-metric-label">{label}</span>
         <span className={`fa-metric-status fa-metric-${status}`}>
-          {status === 'good' ? '✓ Yaxshi' : status === 'mid' ? '~ O\'rta' : (invert ? '! Yuqori' : '! Past')}
+          {status === 'good' ? '✓ Yaxshi' : status === 'mid' ? "~ O'rta" : (invert ? '! Yuqori' : '! Past')}
         </span>
       </div>
       <div className="fa-metric-bar">
-        <div className="fa-metric-fill" style={{ width: `${displayValue}%`, background: color }} />
+        <div className="fa-metric-fill" style={{ width: `${value}%`, background: color }} />
       </div>
-      <p className="fa-metric-val">{displayValue}{suffix}</p>
+      <p className="fa-metric-val">{value}{suffix}</p>
     </div>
   )
 }
