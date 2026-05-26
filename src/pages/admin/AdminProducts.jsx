@@ -90,7 +90,7 @@ export default function AdminProducts() {
           <span className="adm-count-badge">{filtered.length} ta natija</span>
         </div>
 
-        <div className="adm-table-wrap">
+        <div className="adm-table-wrap adm-desktop-only">
           <table className="adm-table">
             <thead>
               <tr>
@@ -144,6 +144,46 @@ export default function AdminProducts() {
               ))}
             </tbody>
           </table>
+          {filtered.length === 0 && (
+            <div className="adm-empty">
+              <div className="adm-empty-icon">🔍</div>
+              <p>Mahsulot topilmadi</p>
+            </div>
+          )}
+        </div>
+
+        {/* Mobile cards */}
+        <div className="adm-mobile-only adm-prod-cards">
+          {filtered.map(p => (
+            <div key={p.id} className="adm-prod-card">
+              <div className="adm-pc-img">
+                {p.image
+                  ? <img src={p.image} alt={p.name} />
+                  : <span className="adm-pc-emoji">{p.emoji || '📦'}</span>
+                }
+                {p.discount > 0 && <span className="adm-pc-disc">-{p.discount}%</span>}
+              </div>
+              <div className="adm-pc-body">
+                <p className="adm-pc-name">{p.name}</p>
+                <div className="adm-pc-meta">
+                  <span className="adm-cat-badge">{p.category}</span>
+                  <span className={`adm-stock-badge ${p.stock < 10 ? 'low' : ''}`}>{p.stock} dona</span>
+                </div>
+                <div className="adm-pc-prices">
+                  <strong className="adm-price-new">{p.price?.toLocaleString()} UZS</strong>
+                  {p.oldPrice > p.price && <span className="adm-price-old">{p.oldPrice?.toLocaleString()}</span>}
+                </div>
+                <div className="adm-pc-actions">
+                  <button className="adm-btn-sm" onClick={() => openEdit(p)}>
+                    <EditIcon /> Tahrirlash
+                  </button>
+                  <button className="adm-btn-icon del" onClick={() => setDelId(p.id)} title="O'chirish">
+                    <TrashIcon />
+                  </button>
+                </div>
+              </div>
+            </div>
+          ))}
           {filtered.length === 0 && (
             <div className="adm-empty">
               <div className="adm-empty-icon">🔍</div>

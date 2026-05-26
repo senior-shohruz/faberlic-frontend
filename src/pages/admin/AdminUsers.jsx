@@ -53,7 +53,7 @@ export default function AdminUsers() {
       </div>
 
       <div className="adm-card">
-        <div className="adm-table-wrap">
+        <div className="adm-table-wrap adm-desktop-only">
           <table className="adm-table">
             <thead>
               <tr>
@@ -105,6 +105,56 @@ export default function AdminUsers() {
               ))}
             </tbody>
           </table>
+          {filtered.length === 0 && (
+            <div className="adm-empty">
+              <div className="adm-empty-icon">👥</div>
+              <p>{search ? 'Foydalanuvchi topilmadi' : 'Foydalanuvchilar yo\'q'}</p>
+            </div>
+          )}
+        </div>
+
+        {/* Mobile cards */}
+        <div className="adm-mobile-only adm-user-cards">
+          {filtered.map(u => (
+            <div key={u.id} className="adm-user-card">
+              <div className="adm-uc-top">
+                <div className="adm-u-avatar">{u.name[0]?.toUpperCase()}</div>
+                <div className="adm-uc-main">
+                  <div className="adm-uc-name">
+                    {u.name}
+                    {u.id === me?.id && <span className="adm-you">Siz</span>}
+                  </div>
+                  <span className={`adm-role-badge ${u.role} adm-uc-role`}>
+                    {u.role === 'admin' ? '👑 Admin' : '👤 User'}
+                  </span>
+                </div>
+              </div>
+              <div className="adm-uc-rows">
+                <div className="adm-uc-row">
+                  <span className="adm-uc-key">Email</span>
+                  <span className="adm-uc-val">{u.email}</span>
+                </div>
+                <div className="adm-uc-row">
+                  <span className="adm-uc-key">Telefon</span>
+                  <a className="adm-uc-val adm-uc-link" href={`tel:+998${u.phone}`}>+998 {u.phone}</a>
+                </div>
+                <div className="adm-uc-row">
+                  <span className="adm-uc-key">Qo'shilgan</span>
+                  <span className="adm-uc-val">{new Date(u.createdAt).toLocaleDateString('uz-UZ')}</span>
+                </div>
+              </div>
+              {u.id !== me?.id && (
+                <div className="adm-uc-actions">
+                  <button className="adm-btn-sm adm-uc-role-btn" onClick={() => toggleRole(u)}>
+                    {u.role === 'admin' ? 'User qil' : 'Admin qil'}
+                  </button>
+                  <button className="adm-btn-icon del" onClick={() => setDelId(u.id)} title="O'chirish">
+                    <TrashIcon />
+                  </button>
+                </div>
+              )}
+            </div>
+          ))}
           {filtered.length === 0 && (
             <div className="adm-empty">
               <div className="adm-empty-icon">👥</div>
