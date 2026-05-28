@@ -9744,3 +9744,16 @@ body .fa-finish:hover {
     0 1px 0 rgba(255,255,255,0.06) inset,
     0 -1px 0 rgba(0,0,0,0.3) inset;
 }
+
+
+/* ============================================================
+   HERO — outer padding (margin from header & section gap)
+   ============================================================ */
+.hs {
+  margin: 10px;
+  border-radius: 24px;
+  overflow: hidden;
+}
+@media (max-width: 768px) {
+  .hs { margin: 8px; border-radius: 18px; }
+}
