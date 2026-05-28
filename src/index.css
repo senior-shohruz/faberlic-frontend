@@ -27,10 +27,12 @@ button { cursor: pointer; border: none; background: none; font-family: inherit; 
 
 /* ===== HEADER ===== */
 .header-wrap {
-  position: sticky;
-  top: 20px;
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
   z-index: 100;
-  padding: 0 10%;
+  padding: 10px 10%;
   pointer-events: none;
 }
 .header {
@@ -9702,9 +9704,12 @@ body .fa-finish:hover {
    Asosiy maqsad: header va hero orasidagi katta oq joyni olib tashlash
    ============================================================ */
 @media (max-width: 768px) {
-  body main { padding-top: 0 !important; margin-top: 8px; }
+  body main { padding-top: 64px !important; margin-top: 0; }
   .hs { margin-top: 0; }
 }
 @media (max-width: 480px) {
-  body main { padding-top: 0 !important; margin-top: 6px; }
+  body main { padding-top: 56px !important; margin-top: 0; }
+}
+@media (min-width: 769px) {
+  body main { padding-top: 80px; }
 }
