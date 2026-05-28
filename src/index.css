@@ -9704,12 +9704,12 @@ body .fa-finish:hover {
    Asosiy maqsad: header va hero orasidagi katta oq joyni olib tashlash
    ============================================================ */
 @media (max-width: 768px) {
-  body main { padding-top: 64px !important; margin-top: 0; }
+  body main { padding-top: 74px !important; margin-top: 0; }
   .hs { margin-top: 0; }
 }
 @media (max-width: 480px) {
-  body main { padding-top: 56px !important; margin-top: 0; }
+  body main { padding-top: 66px !important; margin-top: 0; }
 }
 @media (min-width: 769px) {
-  body main { padding-top: 80px; }
+  body main { padding-top: 90px; }
 }
