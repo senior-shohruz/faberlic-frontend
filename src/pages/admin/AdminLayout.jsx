@@ -79,6 +79,18 @@ export default function AdminLayout() {
               <span>{item.label}</span>
             </NavLink>
           ))}
+
+          <div className="adm-nav-divider" />
+
+          <a
+            href="/"
+            className="adm-nav-link adm-nav-shop"
+            onClick={closeNav}
+          >
+            <ShopIcon />
+            <span>Saytga qaytish</span>
+            <ExternalIcon />
+          </a>
         </nav>
 
         <div className="adm-user">
@@ -123,3 +135,5 @@ function CartIcon() { return <svg width="18" height="18" fill="none" stroke="cur
 function BannerIcon() { return <svg width="18" height="18" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24"><rect x="2" y="5" width="20" height="14" rx="2"/><path d="M2 10h20"/></svg> }
 function LogoutIcon() { return <svg width="16" height="16" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24"><path d="M9 21H5a2 2 0 01-2-2V5a2 2 0 012-2h4M16 17l5-5-5-5M21 12H9"/></svg> }
 function MapPinIcon() { return <svg width="18" height="18" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></svg> }
+function ShopIcon() { return <svg width="18" height="18" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24"><path d="M3 9l1-5h16l1 5"/><path d="M5 9v11a1 1 0 001 1h12a1 1 0 001-1V9"/><path d="M9 21V13h6v8"/></svg> }
+function ExternalIcon() { return <svg width="13" height="13" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24" style={{ marginLeft: 'auto', opacity: 0.6 }}><path d="M18 13v6a2 2 0 01-2 2H5a2 2 0 01-2-2V8a2 2 0 012-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg> }

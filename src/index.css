@@ -9671,3 +9671,27 @@ body .fa-finish:hover {
   .ac-quick { padding: 0 14px 10px; }
   .ac-input-wrap { padding: 12px 14px calc(14px + env(safe-area-inset-bottom)); }
 }
+
+
+/* ============================================================
+   ADMIN — "Back to site" link in sidebar
+   ============================================================ */
+.adm-nav-divider {
+  height: 1px;
+  background: linear-gradient(90deg, transparent, rgba(255,255,255,0.08), transparent);
+  margin: 12px 8px;
+}
+.adm-nav-shop {
+  background: linear-gradient(135deg, rgba(34,197,94,0.1), rgba(34,197,94,0.04)) !important;
+  border: 1px solid rgba(34,197,94,0.25) !important;
+  color: #86efac !important;
+  position: relative;
+  transition: all 0.22s !important;
+}
+.adm-nav-shop:hover {
+  background: linear-gradient(135deg, rgba(34,197,94,0.2), rgba(34,197,94,0.08)) !important;
+  border-color: rgba(34,197,94,0.45) !important;
+  color: #bbf7d0 !important;
+  transform: translateX(2px);
+}
+.adm-nav-shop:hover svg { opacity: 1 !important; }
