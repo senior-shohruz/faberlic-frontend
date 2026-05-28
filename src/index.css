@@ -855,7 +855,7 @@ button { cursor: pointer; border: none; background: none; font-family: inherit; 
 /* ===== HERO SECTION (hs) ===== */
 .hs {
   position: relative;
-  width: 100%;
+  width: auto;
   height: 520px;
   overflow: hidden;
   transition: background 0.8s ease;
