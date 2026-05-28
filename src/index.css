@@ -37,15 +37,16 @@ button { cursor: pointer; border: none; background: none; font-family: inherit; 
 }
 .header {
   pointer-events: all;
-  background: rgba(255,255,255,0.55);
-  backdrop-filter: blur(32px) saturate(180%);
-  -webkit-backdrop-filter: blur(32px) saturate(180%);
-  border: 1px solid rgba(255,255,255,0.6);
+  background: rgba(255,255,255,0.4);
+  backdrop-filter: blur(48px) saturate(200%);
+  -webkit-backdrop-filter: blur(48px) saturate(200%);
+  border: 1px solid rgba(255,255,255,0.5);
   border-radius: 100px;
   box-shadow:
-    0 12px 36px rgba(0,0,0,0.1),
-    0 4px 12px rgba(0,0,0,0.05),
-    0 1px 0 rgba(255,255,255,0.8) inset;
+    0 16px 40px rgba(0,0,0,0.1),
+    0 4px 14px rgba(0,0,0,0.05),
+    0 1px 0 rgba(255,255,255,0.85) inset,
+    0 -1px 0 rgba(0,0,0,0.04) inset;
   padding: 0 8px 0 8px;
   height: 58px;
   display: flex;
@@ -6288,7 +6289,7 @@ button:not(.cart-btn):not(.burger):not(.mob-nav-item):not(.bnr-arr):active {
 
 /* ===== PAGE ANIMATION ===== */
 main { animation: pageIn 0.4s cubic-bezier(0.22,1,0.36,1) both; }
-@keyframes pageIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: none; } }
+@keyframes pageIn { from { opacity: 0; } to { opacity: 1; } }
 
 /* ===== PRODUCT CARD ===== */
 .pc-info { padding: 16px; display: flex; flex-direction: column; gap: 8px; }
