@@ -37,14 +37,14 @@ button { cursor: pointer; border: none; background: none; font-family: inherit; 
 }
 .header {
   pointer-events: all;
-  background: rgba(235,235,238,0.85);
+  background: #ffffff;
   backdrop-filter: blur(28px) saturate(180%);
   -webkit-backdrop-filter: blur(28px) saturate(180%);
-  border: 1px solid rgba(220,220,225,0.6);
+  border: 1px solid rgba(220,220,225,0.8);
   border-radius: 100px;
   box-shadow:
-    0 8px 24px rgba(0,0,0,0.06),
-    0 1px 0 rgba(255,255,255,0.7) inset;
+    0 8px 24px rgba(0,0,0,0.08),
+    0 1px 0 rgba(255,255,255,0.8) inset;
   padding: 0 8px 0 8px;
   height: 58px;
   display: flex;
@@ -2533,15 +2533,13 @@ button { cursor: pointer; border: none; background: none; font-family: inherit; 
 }
 [data-theme="dark"] body { background: #0d0d10; color: #f0f0f0; }
 [data-theme="dark"] .header {
-  background: rgba(18,18,22,0.4);
+  background: #16161e;
   border-color: rgba(255,255,255,0.1);
   box-shadow:
-    0 12px 36px rgba(0,0,0,0.5),
-    0 2px 8px rgba(0,0,0,0.3),
-    0 1px 0 rgba(255,255,255,0.06) inset,
-    0 -1px 0 rgba(0,0,0,0.3) inset;
-  backdrop-filter: blur(40px) saturate(200%);
-  -webkit-backdrop-filter: blur(40px) saturate(200%);
+    0 8px 24px rgba(0,0,0,0.5),
+    0 1px 0 rgba(255,255,255,0.06) inset;
+  backdrop-filter: blur(28px) saturate(180%);
+  -webkit-backdrop-filter: blur(28px) saturate(180%);
 }
 [data-theme="dark"] .nav-link { color: #888; }
 [data-theme="dark"] .nav-link:hover { color: #f0f0f0; background: rgba(255,255,255,0.07); }
@@ -3933,12 +3931,12 @@ button:not(.cart-btn):not(.burger):not(.mob-nav-item):not(.bnr-arr):active {
 /* ===== DARK MODE ADDITIONS ===== */
 [data-theme="dark"] body { background: #0d0d10; }
 [data-theme="dark"] .header {
-  background: rgba(18,18,22,0.4);
+  background: #16161e;
   border-color: rgba(255,255,255,0.1);
-  backdrop-filter: blur(40px) saturate(200%);
-  -webkit-backdrop-filter: blur(40px) saturate(200%);
+  backdrop-filter: blur(28px) saturate(180%);
+  -webkit-backdrop-filter: blur(28px) saturate(180%);
 }
-[data-theme="dark"] .header-wrap { --header-bg: rgba(18,18,22,0.4); }
+[data-theme="dark"] .header-wrap { --header-bg: #16161e; }
 [data-theme="dark"] .logo-text, [data-theme="dark"] .logo-dot { color: #fff; }
 [data-theme="dark"] .nav-link { color: rgba(255,255,255,0.5); }
 [data-theme="dark"] .nav-link:hover { color: #fff; background: rgba(255,255,255,0.06); }
@@ -9729,20 +9727,16 @@ body .fa-finish:hover {
    HEADER — Glass blur on scroll (Mobbin-style)
    ============================================================ */
 .header-wrap.scrolled .header {
-  background: rgba(255,255,255,0.6);
+  background: #ffffff;
   box-shadow:
-    0 16px 48px rgba(0,0,0,0.12),
-    0 2px 8px rgba(0,0,0,0.06),
-    0 1px 0 rgba(255,255,255,0.85) inset,
-    0 -1px 0 rgba(0,0,0,0.04) inset;
+    0 12px 32px rgba(0,0,0,0.1),
+    0 1px 0 rgba(255,255,255,0.8) inset;
 }
 [data-theme="dark"] .header-wrap.scrolled .header {
-  background: rgba(18,18,22,0.55);
+  background: #16161e;
   box-shadow:
-    0 16px 48px rgba(0,0,0,0.6),
-    0 2px 8px rgba(0,0,0,0.3),
-    0 1px 0 rgba(255,255,255,0.06) inset,
-    0 -1px 0 rgba(0,0,0,0.3) inset;
+    0 12px 32px rgba(0,0,0,0.6),
+    0 1px 0 rgba(255,255,255,0.06) inset;
 }
 
 
