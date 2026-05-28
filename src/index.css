@@ -6202,15 +6202,15 @@ button:not(.cart-btn):not(.burger):not(.mob-nav-item):not(.bnr-arr):active {
 
 /* ===== HEADER MOBILE ===== */
 @media (max-width: 768px) {
-  .header-wrap { top: 10px; padding: 0 12px; }
-  .header { height: 54px; padding: 0 6px 0 10px; border-radius: 18px; }
+  .header-wrap { top: 6px; padding: 0 8px; }
+  .header { height: 50px; padding: 0 6px 0 10px; border-radius: 16px; }
   .header-search-btn { display: none; }
   .header-cta { padding: 8px 16px; font-size: 12px; }
   .user-avatar-name { display: none; }
   .user-avatar { padding: 4px 8px 4px 4px; gap: 4px; }
-  main { padding-top: 70px; }
+  main { padding-top: 12px; }
 }
-@media (max-width: 480px) { .header { height: 50px; border-radius: 16px; } .logo-text { font-size: 16px; } main { padding-top: 60px; } }
+@media (max-width: 480px) { .header { height: 48px; border-radius: 14px; } .logo-text { font-size: 16px; } main { padding-top: 8px; } }
 
 /* ===== SCROLLBAR ===== */
 ::-webkit-scrollbar { width: 6px; height: 6px; }
@@ -9695,3 +9695,16 @@ body .fa-finish:hover {
   transform: translateX(2px);
 }
 .adm-nav-shop:hover svg { opacity: 1 !important; }
+
+
+/* ============================================================
+   HEADER → HERO — TIGHT GAP (mobile)
+   Asosiy maqsad: header va hero orasidagi katta oq joyni olib tashlash
+   ============================================================ */
+@media (max-width: 768px) {
+  body main { padding-top: 0 !important; margin-top: 8px; }
+  .hs { margin-top: 0; }
+}
+@media (max-width: 480px) {
+  body main { padding-top: 0 !important; margin-top: 6px; }
+}
